@@ -1,0 +1,92 @@
+---
+title: "The Linux Command Line"
+author: "yincy"
+date: "8/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Commands
+
+- pwd
+- cd
+- ls
+- file: determine file type
+- less
+- cp
+- mv
+- mkdir
+- rm
+- ln: create hard and symbolic links
+- type: indicate how a command name is interpreted
+- which: display which executable program will be executed
+- man
+- apropos: display a list of appropriate commands
+- info: display a command's info entry
+- whatis: display a very brief description of a command
+- alias: create an alias for a command
+- cat: display file content or concatenate files
+- `|`: piplines
+- sort
+- uniq: report or omit repeated lines
+- wc: print line, word and byte counts
+- grep: print lines matching a pattern
+    - grep pattern [file...]
+- head  
+- tail  
+- tee: reads standard input and copies it to both standard output (allowing the data to continue down the pipeline) and to one or more files (save pile content at the intermediate stage).  
+- echo  
+- arithmetic expansion use the form: $((expression))  
+    - arithmetic expansion only supports integers, but can perform a number of different operations.  
+- Double quotes: if you place text inside double quotes, all the special characters used by the shell lose their special meaning and are treated as ordinary characters. The exceptions are "$", "\", and "`". This means that word-splitting, pathname expansion, tilde expansion, and brce expansion are suppressed, but parameter expansion, arithmetic expansion, and command substitutions are still carried out.  
+- Single quotes: suppress all expansions.  
+```
+> echo text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
+# text /home/yincy/*.txt a b foo 4 yincy
+
+> echo "text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER"
+# text ~/*.txt {a,b} foo 4 yincy
+
+> echo 'text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER'
+# text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
+```
+
+- `\`: escaping characters  
+
+
+
+***
+
+# I/O redirection
+
+- `>`: redirection standard output  
+- `>>`: redirection standard output with append  
+- `2\>`: redirection standard error  
+
+Redirecting standard output and standard error to one file.\
+The direction of standard error must always occur after redirecting standard output or it doesn't work.  
+```
+ls -l /bin/usr > ls-output.txt 2>&1
+
+ls -l /bin/usr &> ls-output.txt
+
+ls -l /bin/usr &>> ls-output.txt
+```
+
+disposing of unwanted output
+```
+ls -l /bin/usr 2> /dev/null
+```
+
+>file description  
+
+>>standard input: 0  
+>>standard output: 1  
+>>standard error: 2  
+
+
+
+
