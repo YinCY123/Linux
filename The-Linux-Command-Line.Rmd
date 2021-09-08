@@ -418,11 +418,131 @@ The options are used to control the scope of a find search.
 
 
 
+# tar 
+file archiving.  
+
+## syntax
+```
+tar mode[options] pathname...
+```
+
+## tar modes
+|**Mode**|**Description**|
+|:--|:--|
+|`c`|Create an archive from a list of files and/or directories|
+|`x`|Extract an archive.|
+|`r`|Append specified pathnames to the end of an archive.|
+|`t`|List the contents of an archive.|
+
+## Examples 
+```
+tar cf playground.tar ../playground
+```
+Creates a tar archive named playground.tar that contains the entire playground directory hierarchy.
+
+
+```
+mkdir foo
+cd foo
+
+tar xf ../playground.tar
+```
+Extract the playground into a new location.  
+
+
+## limit extract from an archive
+```
+tar xf archive.tar pathname
+```
+By adding the trailing pathname to the command, tar will only restore the specified file. Multiple pathnames may be specified. Note that the pathname must be the full, exact relative pathname as stored in the archive.  
+
+The GUN version of tar supports the --wildcards option.  
+
+```
+cd foo 
+tar xf ../playground.tar --wildcards 'playground/dir-*/file-A'
+```
+
+tar is often used in conjunction with find to produce archives. 
+
+```
+find playground -name 'file-A' -exec tar rf playground.tar '{}' '+'
+```
+
+# zip
+The zip program is both a compression tool and an archiver.  
+
+## usage 
+```
+zip options zipfile file...
+```
+
+```{r}
+zip -r playground.zip playground
+```
+
+Unless we include the -r option for recursion, only the playground directory (but none of its contents) is stored.  
+
+If an existing archive is specified, it is updated rather than replaced. This means that the existing archive is preserved, but new files are added and matching files are replaced.  
+
+# rsync
+This program can syn- chronize both local and remote directories by using the rsync remote-update protocol, which allows rsync to quickly detect the differences between two directories and per- form the minimum amount of copying required to bring them into sync. This makes rsync very fast and economical to use, compared to other kinds of copy programs.  
+
+## usage
+```
+rsync options source destination
+```
+where source and destination are one of the following:  
+
+- a local file or directory  
+- a remote file or directory in the form of [user@]host:path]  
+- a remote rsync server specified with a URI of rsync://[user@]host[:port]/path  
+
+> Note that either the source or the destination must be a local file. Remote-to-remote copy is not supported.  
+
+```
+mkdir foo
+
+rsync -av playground foo
+
+sudo rsync -ac --delete /etc /home /usr/local /media/bigdisk/backup
+```
+the --delete option to remove files that may have existed on the backup device that no longer existed on the source de- vice (this is irrelevant the first time we make a backup, but will be useful on subsequent copies).  
+
+## backup over a network
+```
+sudo rsync -av --delete --rsh=ssh /etc /home /usr/local remote-sys:/backup
+```
+First, we added the --rsh=ssh option, which instructs rsync to use the ssh program as its remote shell. In this way, we were able to use an ssh encrypted tunnel to securely transfer the data from the local system to the remote host. Second, we specified the remote host by prefixing its name (in this case the remote host is named remote-sys) to the destination pathname.  
+
+
+# regular expressions
+grep searches text files for the occurrence of a specified regular expression and outputs any line containing a match to standard output.  
+
+## usage
+```
+grep [options] regex [file...]
+```
+
+**grep Options**
+
+|**Option**|**Description**|
+|:--|:--|
+|-i|ignore case|
+|-v|invert match|
+|-c|print the numer of matches instead of the lines themselves. may also be specified --count|
+|-l|print the name of each file that contains a match instead of the line themselves. may also be specified --files-without-match|
+|-L|like the -l option, but print only the names of files that do not contain matches. may also be specified --files-without-match|
+|-n|prefix eeach matching line with the number of the line within the file. may also be specified --line-number|
+|-h|for multi-file searches, suppress the output of filenames. may also be specified --no-filename|
 
 
 
 
 
+
+
+ 
 
 
 
