@@ -9,28 +9,39 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Commands
-
-- pwd
-- cd
-- ls
+## Basics  
+- pwd  
+- cd  
+- ls  
 - file: determine file type
-- less
+- less  
+
+
+# file and directory manipulation  
 - cp
 - mv
 - mkdir
 - rm
-- ln: create hard and symbolic links
+- ln: create hard and symbolic links  
+
+
+# help 
 - type: indicate how a command name is interpreted
 - which: display which executable program will be executed
 - man
 - apropos: display a list of appropriate commands
 - info: display a command's info entry
-- whatis: display a very brief description of a command
-- alias: create an alias for a command
-- cat: display file content or concatenate files
-- `|`: piplines
-- sort
+- whatis: display a very brief description of a command  
+
+
+# redirection  
+- `>`: redirection standard output  
+- `>>`: redirection standard output with append  
+- `2\>`: redirection standard error  
+- alias: create an alias for a command  
+- cat: display file content or concatenate files  
+- `|`: piplines  
+- sort  
 - uniq: report or omit repeated lines
 - wc: print line, word and byte counts
 - grep: print lines matching a pattern
@@ -39,34 +50,8 @@ knitr::opts_chunk$set(echo = TRUE)
 - tail  
 - tee: reads standard input and copies it to both standard output (allowing the data to continue down the pipeline) and to one or more files (save pile content at the intermediate stage).  
 - echo  
-- arithmetic expansion use the form: $((expression))  
-    - arithmetic expansion only supports integers, but can perform a number of different operations.  
-- Double quotes: if you place text inside double quotes, all the special characters used by the shell lose their special meaning and are treated as ordinary characters. The exceptions are "$", "\", and "`". This means that word-splitting, pathname expansion, tilde expansion, and brce expansion are suppressed, but parameter expansion, arithmetic expansion, and command substitutions are still carried out.  
-- Single quotes: suppress all expansions.  
-```
-> echo text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
-# text /home/yincy/*.txt a b foo 4 yincy
 
-> echo "text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER"
-# text ~/*.txt {a,b} foo 4 yincy
-
-> echo 'text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER'
-# text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
-```
-
-- `\`: escaping characters  
-
-
-
-***
-
-# I/O redirection
-
-- `>`: redirection standard output  
-- `>>`: redirection standard output with append  
-- `2\>`: redirection standard error  
-
-Redirecting standard output and standard error to one file.\
+Redirecting standard output and standard error to one file.  
 The direction of standard error must always occur after redirecting standard output or it doesn't work.  
 ```
 ls -l /bin/usr > ls-output.txt 2>&1
@@ -86,6 +71,357 @@ ls -l /bin/usr 2> /dev/null
 >>standard input: 0  
 >>standard output: 1  
 >>standard error: 2  
+
+
+# expansion  
+- pathname expansion  
+    - ls D*
+
+- tilde expansion  
+    - echo ~; echo ~yincy
+
+- arithmetic expansion use the form: $((expression))  
+    - arithmetic expansion only supports integers, but can perform a number of different operations.  
+    
+- brace expansion  
+    - mkdir front-{A,B,C}-Back; mkdir {2001..2010}-{01..12}
+
+- parameter expansion  
+    - echo $USER  
+    
+- command substitution  
+    - `echo $(ls)`; `ls -lh $(which cp)`  
+
+- quoting  
+    - Double quotes: if you place text inside double quotes, all the special characters used by the shell lose their special meaning and are treated as ordinary characters. The exceptions are "$", "\", and "`". This means that word-splitting, pathname expansion, tilde expansion, and brce expansion are suppressed, but parameter expansion, arithmetic expansion, and command substitutions are still carried out.  
+    - Single quotes: suppress all expansions.  
+
+
+```
+> echo text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
+# text /home/yincy/*.txt a b foo 4 yincy
+
+> echo "text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER"
+# text ~/*.txt {a,b} foo 4 yincy
+
+> echo 'text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER'
+# text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
+```
+
+- `\`: escaping characters  
+
+
+# history  
+- clear: clear the screen  
+- history  
+- !! re-execute the previous command  
+- !77: re-execute the history command 77  
+- Ctrl-r: search history incrementally, press again to find the next matched command  
+- Ctrl-j: copy the line from the searched history to the current command line  
+- Ctrl-c or Ctrl-g quit the history search  
+
+
+# permissions  
+- id: display user identity  
+- umask: set the default file permissions when it is created  
+- su: run a shell as another user  
+- sudo: execute a command as another user  
+- chown: change a file's owner  
+    - chown [owner][:[group]] file  
+
+- chgrp: change group ownership. (much work can be done by chown)  
+- chmod: change file mode. only the file's owner or the superuser can change the mode of a file or directory.  
+- adduser( recommanded)  
+- useradd  
+- groupadd  
+
+
+```{bash}
+# print the default umask
+umask 
+
+> foo.txt
+ls -lh foo.txt  
+rm foo.txt
+
+# set the umask to 0002
+umask 0022
+> foo.txt
+ls -lh foo.txt
+```
+
+```{r}
+knitr::include_graphics("figures/umask.png")
+```
+
+The first three permission digits described in page 122 on <the Linux command line>.  
+
+## permission attributes  
+```{r}
+knitr::include_graphics("figures/permission.png")
+```
+
+```{r}
+knitr::include_graphics("figures/permission-attributes.png")
+```
+
+```{r}
+knitr::include_graphics("figures/permission-examples.png")
+```
+
+|**Octal**|**Binary**|**File Mode**|  
+|:--|:--|:--|
+|0|000|---|
+|1|001|--x|
+|2|010|-w-|
+|3|011|-wx|
+|4|100|r--|
+|5|101|r-x|
+|6|110|rw-|
+|7|111|rwx|
+
+
+|**Symbol**|**Meaning**|
+|:--|:--|
+|u|short for 'user' but means the file or directory owner.|
+|g|group owner|
+|o|short for 'others', but means world.|
+|a|short for 'all'. The combination of 'u', 'g' and 'o'.|
+
+
+```{r}
+knitr::include_graphics("figures/permission-example-1.png")
+```
+
+> '+' indicates that a permission is to be added.  
+> '-' indicates that a permission is to be removed.  
+> '=' indicates that only the specified permissions are to be applied and that all other are to be removed.  
+> multiple specifications separated by commas.  
+
+
+# file type  
+- `-`: a regular file  
+- `d`: a directory  
+- `l`: a symbolic link. with symbolic links, the remaining file attributes are always 'rwxrwxrwx'  
+- `c`: a character special file. This file type refers to a device that handles data as a stream of bytes, such as a terminal or modem.  
+- `b`: a block special file. This file type refers to device that handles data in blocks, such as a hard drive or CD-ROM drive.  
+
+
+# changing identities
+- su: allows you to assume the identity of another user  
+- sudo: allows an administrator to set up a configuration file called /etc/sudoers, and define specific commands that particular users are permitted to execute under an assumed identity.  
+
+
+# change password
+- password: enter the password to change your password, if you have superuser privileges, you can specify a username as an argument to the password command to set the password for another user.  
+
+
+# processes
+Processes are how Linux organizes the different programs waiting for their turn at the CPU.  
+
+- ps: report a snapshot of current processes, just the processes associated with the current terminal session  
+    - ps; ps x; ps aux  
+
+- top: display tasks  
+- jobs: list active jobs  
+- bg: place a job in the background  
+    - bg gedit &; bg notepad-plus-plus &  
+
+- fg: place a job in the foreground  
+    - with the fg command, the jobspec is optional if there is only one job  
+    - fg %1; fg 2%  
+
+- Ctrl-z: stopping a process  
+- Ctrl-c: interrupts a program, terminate a program  
+- kill: send a signal to a process  
+    - kill [-signal] PID  
+    - kill PID; kill %[:digit:] (kill an background running program)  
+
+**Common Signals**  
+|**Number**|**Name**|**Meaning**|
+|:--|:--|:--|
+|1|HUP|Hangup. The signal is used to indicate to programs that the controlling terminal has "hung up". The effect of this signal can be demonstrated by closing a terminal session. The foreground program running on the terminal will be sent the signal and will terminate.|
+|2|INT|Interrupt. Performs the same as the Ctrl-c key sent from the terminal. It will usually terminate a program.|
+|3|QUIT|Quit|
+|9|KILL|Kill. This signal is special. Whereas programs may choose to handle signals sent to them in different ways, including ignoring them in different ways, including ignoring them all together, the KILL signal is never actually sent to the target program. Rather, the kernel immediately terminates the process. When a process is terminated in this manner, it is given no opportunity to 'clean up' after itself or save its work. For this reason, the KILL signal should only be used as a last resort when other termination signals fail.|
+|11|SEGV|Segmentation Violation. This signal is sent if a program makes illegal use of memory, that is, it tried to write somewhere it was not allowed to.|
+|15|TERM|Terminate. This is the default signal sent by the kill command. If a program is still 'alive' enough to receive signals, it will terminate.|
+|18|CONT|Continue. This will restore a process after a STOP signal.|
+|19|STOP|Stop. This signal causes a process to pause without terminating. Like the KILL signal, it is not sent to the target process, and thus it cannot be ignored.|
+|20|TSTP|Terminal Stop. This is the signal sent by the terminal when the Ctrl-z key is pressed. Unlike the STOP signal, the TSTP signal is received by the program but the program may choose to ignore it.|
+|28|WINCH|Window Change. This is a signal sent by the system when a window changes size. Some programs, like top and less will respond to this signal by redrawing themselves to fit the new window dimensions.|
+
+- killall: sending signals to multiple processes  
+    - killall [-u user] [-signal] name ...  
+- shutdown: shutdown or reboot the system  
+
+> Processes, like files, have owners, and you must be the owner of a process (or the superuser) in order to sent it signals with kill.  
+> for the complete list of signals following the command: kill -l  
+
+**process related commands**  
+|**Command**|**Description**|
+|:--|:--|
+|pstree|Outputs a process list arranged in a tree-like pattern showing the parent/child relationships between processes.|
+|vmstat|Outputs a snapshot of system resource usage including memory, swap and disk I/O. To see a continuous display, follow the command with a time delay (n seconds) for updates.|
+|xload|A graphical program that draws a graph showing system load over time.|
+|tload|Similar to the xload program, but draws the graph in the terminal.|
+
+
+**Process States**  
+|**State**|**Meaning**|  
+|:--|:--|
+|R|Runing. This means that the process is running or ready to run.|  
+|S|Sleeping. The process is not running; rather, it is waiting for an event, such as a keystroke or network packet.|
+|D|Uninterruptible Sleep. Process is waiting for I/O such as disk drive.|
+|T|Stopped. Process has been instructed to stop.|
+|Z|A defunct or 'zombie' process. This is a child process that has terminated, but has not been cleaned up by its parent.|
+|<|A high priority process. It's possible to grant more importance to a process, giving it more time on the CPU. This property of a process is called niceness. A process with high priority is said to be less nice because it's taking more of the CPU's time, which leaves less for everybody else.|
+|N|A low priority process. A process with low priority (a 'nice' process) will only get processor time after other processes with higher priority have been serviced.|
+
+
+# Environment
+The shell maintains a body of information during our shell session called the environment. Data stored in the environment is used by programs to determine facts about our configuration. While most programs use configuration files to store program settings, some programs will also look for values stored in the environment to adjust their behavior.  
+
+The shell stores two basic types of data in the environment:  
+- environment variables  
+- shell variables  
+
+***
+
+- printenv: print part or all of the environment, show only environment variable  
+- set: set shell options, show both shell and environment x cvvariables  
+- export: export environment to subsequently executed programs  
+- alias: create an alias for a command  
+
+
+**Startup files for login shell sessions**  
+|**File**|**Contents**|
+|:--|:--|
+|`/etc/profile`|A global configuration script that applies to all users.|
+|`/etc/bash.bashrc`|A global configuration script that applies to all users.|
+|`~/.bashrc`|A user's personal startup file. Can be used to extend or override settings in the global configuration script.|
+
+
+# Searching files
+- locate: performs a rapid database search of pathnames, and outputs every name that matches a given substring.  
+    - locate bin/zip  
+- find: search for files in a directory hierarchy  
+    - find ~ -type d; find ~ -type f  
+    
+**File Types**  
+|**File type**|**Description**|
+|:--|:--|
+|b|Block special deviece file|
+|c|Character special device file|
+|d|Directory|
+|f|Regular file|
+|l|Symbolic link|
+
+
+## find
+### test
+|**Test**|**Description**|
+|:--|:--|
+|-cmin n|Match files or directories whose **content or attributes** were last modified exactly n minutes ago.|
+|-ctime n|Match files or directories whose **contents or attributes** were last modified n*24 hours ago.|
+|mmin n|Match files or directories whose **contents** were last modified n minutes ago.|
+|mtime n|Match files or directories whose **contents** were last modified n*24 hours ago.|
+|-atime n|File was last **accessed** n*24 hours ago.|
+|-amin n|File was last **accessed** n minutes ago.|
+|-cnewer file|Match files or directories whose **contents or attributes** were last modified more recently than those of file.|
+|-newer file|Match files and directories whose **contents** were modified more recently than the specified file.|
+|-size n|Match files of size n.|
+|-type c|Match files of type c.|
+|-user name|Match files or directories belonging to user name.|
+|-perm mode|Match files or directories that have permissions set to the specified mode.|
+|nogroup|Match files or directories that have permissions set to the specified mode.|
+|nouser|Match file and directories that do not belong to a valid user.|
+|-name pattern|Match files and directories with the specified wildcard pattern.|
+|-iname pattern|Like the -name test but case insensitive.|
+|-group name|Match file or directories belonging to group.|
+|-empty|Match empty files and directories.|
+|-inum n|Match files with inode number n. This is helpful for finding all the hard links to a particular inode.|
+|-samefile name|Similar to the -inum test. Matches files that share the same inode number as file name.|
+
+***
+
+### operators
+provide logical relationships between the test.  
+
+|**Operator**|**Description**|
+|:--|:--|
+|-and|Match if the tests on both sides of the operator are true. May be shortened to -a.|
+|-or|Match if a test on either side of the operator is true. May be shortened to -o.|
+|-not|Match if the test following the operator is false. May be abbreviated with an exclamation point (!).|
+|()|Groups tests and operators together to form larger expressions.|
+
+***
+
+### actions
+Having a list of results from find command but what we really want to do is performed by predefined action parameters.  
+
+|**Action**|**Description**|
+|:--|:--|
+|-delete|delete the currently matching file.|
+|-ls|perform the equivalent of `ls -dils` on the matching file.|
+|-print|output the full pathname of the matching file to standard output.This is the default action.|
+|-quit|quit once a match has been made.|
+
+> there are many more action, to the man page for help.
+
+***
+
+### user-defined actions
+-exec command {};  
+
+where command is the name of a command, {} is a symbolic representation of the current pathname, and the semicolon is a required delimiter indicating the end of the command.  
+
+examples to delete matched files  
+```
+-exec rm '{}' ';'
+```
+
+> since the brace and semicolon characters ahve special meaning to the shell, they must be quoted or escaped.  
+
+It’s also possible to execute a user-defined action interactively. By using the -ok action in place of -exec, the user is prompted before execution of each specified command:  
+
+```
+find ~ -type f -name 'foo*' -ok ls -l '{}' ';'
+```
+
+we search for files with names starting with the string “foo” and execute the command ls -l each time one is found. Using the -ok action prompts the user before the ls command is executed.  
+
+***
+
+- xargs: build and execute command lines from standard input  
+The xargs command performs an interesting function. It accepts input from standard in- put and converts it into an argument list for a specified command.  
+
+```
+find ~ -type f -name 'foo*' -print | xargs ls -lh
+```
+
+### options
+The options are used to control the scope of a find search.  
+
+|**Option**|Description**|
+|:--|:--|
+|-depth|direct find to process a directory's files before the directory itself. This options is automatically applied when the -delete action is specified.|
+|-maxdepth levels|Set the maximum number of levels that find will descend into a directory tree when performing tests and actions.|
+|-mindepth levels|Set the minimum number of levels that find will descend into a directory tree before applying tests and actions.|
+|-mount|direct find not to traverse directories that are mounted on other file systems.|
+|-noleaf|direct find not to optimize its search based on the assumption that it is searching a Unix-like file system. This is needed when scanning DOS/Windows file systems and CD-ROMs.|
+
+***
+
+- touch: change file times  
+- stat: display file or file system status  
+
+
+
+
+
+
+
 
 
 
