@@ -530,16 +530,50 @@ grep [options] regex [file...]
 |:--|:--|
 |-i|ignore case|
 |-v|invert match|
-|-c|print the numer of matches instead of the lines themselves. may also be specified --count|
+|-c|print the number of matches instead of the lines themselves. may also be specified --count|
 |-l|print the name of each file that contains a match instead of the line themselves. may also be specified --files-without-match|
 |-L|like the -l option, but print only the names of files that do not contain matches. may also be specified --files-without-match|
 |-n|prefix eeach matching line with the number of the line within the file. may also be specified --line-number|
 |-h|for multi-file searches, suppress the output of filenames. may also be specified --no-filename|
 
+## metacharacters
+- `^`: begining anchor  
+- `$`: end anchor  
+- `.`: any character  
+- `[`  
+- `]`  
+- `{}`: match an element a specific number of times  
+- `-`  
+- `?`: match an element zero or one time  
+- `*`: match an element zero or more times 
+- `+`: match an element one or more times  
+- `(`  
+- `)`  
+- `|`  
+- `\`  
+
+>All other characters are considered literals, though the backslash character is used in a few case to create *meta sequences*, as well as allowing the metacharacters to be escaped and treated as literals instead of being interpreted as metacharacters.  
+
+> When we pass regular expressions containing metacharacters on the command line, it is vital that they enclosed in quotes to prevent the shell from attempting to expand them.  
 
 
+**POSIX Character Classes**
 
-
+|**Character Class**|**Description**|
+|:--|:--|
+|[:alnum:]|The alphanumeric characters. In ASCII, equivalent to [A-Za-z0-9]|
+|[:word:]|The same as [:alnum:], with the addition of the underscore (_) character.|
+|[:alpha:]|The alphabetic characters. In ASCII, equivalent to: [A-Za-z]| 
+|[:blank:]|Includes the space and tab characters.|
+|[:cntrl:]|The ASCII control codes. Includes the ASCII characters 0 through 31 and 127|
+|[:digit:]|The numerals zero through nine.|
+|[:graph:]|The visible characters. In ASCII, it is includes characters 33 through 126.|
+|[:lower:]|The lowercase letters.|
+|[:punct:]|The punctuation characters. In ASCII, equivalent to: [-!"#$%&'()*+,./:;<=>?@[\\\]_`{|}~]|
+|[:print:]|The printable characters. All the characters in [:graph:] plus the space character.|
+|[:space:]|The whitespace characters including space, tab, carriage return, newline, vertical tab, and form feed. In ASCII, equivalent to: [ \t\r\n\v\f]|
+|[:upper:]|The uppercase characters.|
+|[:xdigit:]|Characters used to express hexadecimal numbers. In ASCII, equivalent to: [0-9A-Fa-f]|
 
 
  
