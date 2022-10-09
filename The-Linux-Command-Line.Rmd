@@ -9,47 +9,176 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Basics  
-- pwd  
-- cd  
-- ls  
-- file: determine file type
-- less  
+# Navigation
+1. `pwd`: print name of current working directory.  
+2. `cd`: change directory.  
+    - `cd`: change the working directory to your home directory.  
+    - `cd -`: changes the working directory to the previous working directory.  
+    - `cd ~user_name`: change the working directory to the home directory of `user_name`.  
+3. `ls`: list directory contents.  
+4. `.`: refers to the working directory.  
+5. `..`: refers to the working directory's parent directory.  
 
 
-# file and directory manipulation  
-- cp
-- mv
-- mkdir
-- rm
-- ln: create hard and symbolic links  
+**Absolute and relative pathnames**  
+An absolute pathanme begins with the root directory and follows the tree branch by branch until the path to the desired directory or file is completed.  
+
+A relative pathname starts from the working directory to the destination.  
 
 
-# help 
-- type: indicate how a command name is interpreted
-- which: display which executable program will be executed
-- man
-- apropos: display a list of appropriate commands
-- info: display a command's info entry
-- whatis: display a very brief description of a command  
+# Exploring the system
+1. `file`: determine file type.  
+2. `less`: view file contents.  
+    - `ls ~ /usr`
+    - `ls -l`
+    
+
+**Options and arguments**  
+```
+command -options arguments
+```
+
+# Manipulating Files and Directories
+1. `cp`: copy files and directories  
+    - `cp item1 item2`: copy single file or directory 'item1' to file or directory 'item2'  
+    - `cp item ... directory`: copy multiple items into a directory  
+    - `cp file1 file2`: copy file1 to file2, if file2 exists, it is overwritten with the contents of file1. If file2 does not exist, it is created.  
+    - `cp -i file1 file2`: same as above, except that if file2 exists, the user is prompted before it is overwritten.  
+    - `cp file1 file22 dir1`: copy file1 and file2 into directory dir1. dir1 must already exist.  
+    - `cp dir1/* dir2`: Using a wildcard, all the files in dir1 are copied into dir2, dir2 must already exist.  
+    - `cp -r file1 file2`: copy the contents of directory dir1 to directory dir2. If directory dir2 does not exist, it is created and, after the copy, will contain the same contents as directory dir1.  
+
+2. `mv`: move/rename files and directories  
+    - `mv item1 item2`: move or rename file or directory item1 to item2.  
+    - `mv item ... directory`: move one or more items from one directory to another.  
+3. `mkdir`: create directories  
+4. `rm`: remove files and directories  
+5. `ln`: create hard and symbolic links   
+    - `ln file link`: create a hard link
+    - `ln -s item link`: create a symbolic link, where 'item' is either a file or a directory.  
+
+
+
+**Hard and Symbolic Links**  
+- Hard links are the original Unix way of creating links, compared to symbolic links, which are more modern. By default, every file has a single hard link that gives the file its name. When we create a hard link, we create an additional directory entry for a file.  
+- A hard link cannot reference a file outside its own file system. This means a link cannot reference a file that is not on the same disk partition as the link itself.  
+- A hard link may not reference a directory.  
+- A hard link is indistinguishable from the file itself. When a hard link is deleted, the link is removed but the contents of the file itself continue to exist until all links to the file are deleted.  
+- Symbolic links are created to overcome the limitations of hard links. Symbolic links work by creating a special type of file that contains a text pointer to the referenced file or directory. In this regard, they operate in much the same way as a Windows shortcut though of course, they predate the Windows feature by many years.  
+- When you delete a symbolic link, only the link is deleted, not the file itself. If the file is deleted before the symbolic link, the link will continue to exist, but will point to nothing.  
+- Symbolic links were created to overcome the two disadvantages of hard links, hard links cannot span physical devices and hard links cannot reference directories, only files.  
+- Symbolic links are a special type of file that contains a text pointer to the target file or directory.  
+- When we create a symbolic link, we are creating a text description of where the target file is relative to the symbolic link.  
+
+
+**Wildcards**  
+
+|**Wildcard**|**Meaning**|
+|--|--|
+|`*`|matches any characters|
+|`?`|matches any single character|
+|`[characters]`|matches any character that is a member of the set characters|
+|`[!characters]`|matches an character that is not a member of the set|
+|`[[:class:]]`|matches any character that is a member of the specified class|
+
+
+----
+
+
+**Commonly Used Character Classes**   
+
+|**Character Class**|**Meaning**| 
+|--|--|
+|`[:alnum:]`|matches any alphanumeric character|
+|`[:alpha:]`|matches any alphabetic character|
+|`[:digit:]`|matches any numeral|
+|`[:lower:]`|matches any lowercase letter|
+|`[:upper:]`|matches any uppercase letter|
+
+Wildcards can be used with any command that accepts filenames as arguments.  
+
+
+# Working with Commands
+1. `type`: indicate how a command name is interpreted.  
+2. `which`: display which executable program will be executed, the location of the program.  
+    - `which` only works for executable programs, not builtins nor aliases that are substitutes for actual executable programs.  
+3. `help`: get help for shell builtins.  
+4. `man`: display a command's manual page.  
+5. `apropos`: display a list of appropriate commands.  
+6. `info`: display a command's info entry.  
+7. `whatis`: display a very brief description of command.  
+8. `alias`: create an alias for a command.  
+
+
+**What exactly are commands?**  
+- **An executable program** like all those files we saw in `/usr/bin`. Within this category, programs can be compiled binaries such as programs writtern in C and C++, or programs can be written in scripting languages such as shell, perl, python, ruby, etc.  
+
+- **A command built into the shell itself**. bash supports a number of commands internally called shell builtins. The `cd` command, for exmaple, is a shell builtin.  
+
+- **A shell function**. These are miniature shell scripts introduced into the environment.  
+
+- **An alias**. Commands that we can define ourselves, built from other commands.  
+
+
+**Getting A command's documentation**  
+- `help`: get help for shell builtins.  
+- `--help`: display usage information for executable programs.  
+- `man`: display executable program's manual page.  
+    - `man section_number command`: man 8 cp  
+- `apropos`: display appropriate commands  
+    - search the list of man pages for possible matches based on a search term.  
+- `whatis`: display a very brief description of a command.  
+- `info`: display a program's info entry.  
+    - The info program reads info files, which are tree structured into individuals nodes, each containing a single topic. Info files contain hyperlinks that can be move you from one node to node.  
+
+- `alias`: create command from commands
+    - `alias new_command='string'`  
+    - `alias foo='cd /usr; ls -lh; cd -'`  
+    - to remove an alias using `unalias`  
+    - to see all the alias defined in the environment, use the `alias` command without arguments.  
+
+
+> it is possible to put more than one command on a line by separating each command with a semicolon character.  
+
+```
+cd /usr; ls -lh; cd -
+```
+
+
+**man page organization**  
+
+|**Section**|**Contents**|
+|:--|:--|
+|`1`|User commands|
+|`2`|Programming interfaces kernel system calls|
+|`3`|Programming interfaces to the C library|
+|`4`|Special files such as device nodes and drivers|
+|`5`|File formats and conventions|
+|`6`|Games and amusements such as screen savers|
+|`7`|Miscellanous|
+|`8`|System administration commands|
+
 
 
 # redirection  
-- `>`: redirection standard output  
-- `>>`: redirection standard output with append  
-- `2\>`: redirection standard error  
-- alias: create an alias for a command  
-- cat: display file content or concatenate files  
+- `cat`: display file content or concatenate files.  
+    - `cat *.tiff > merge.tiff`.  
+- `sort`: sort lines of text.  
+- `uniq`: report or omit repeated lines.  
+- `grep`: print lines matching a pattern.  
+    - `grep pattern [file...]`  
+
+- `wc`: print newlines, word and byte counts for each file.  
+- `head`: Output the first part of a file.    
+- `tail`: Output the last part of a file.  
+- `tee`: read from standard input and write to standard output and files.  
+- `echo`  
 - `|`: piplines  
-- sort  
-- uniq: report or omit repeated lines
-- wc: print line, word and byte counts
-- grep: print lines matching a pattern
-    - grep pattern [file...]
-- head  
-- tail  
-- tee: reads standard input and copies it to both standard output (allowing the data to continue down the pipeline) and to one or more files (save pile content at the intermediate stage).  
-- echo  
+- `>`: redirection standard output.  
+- `>>`: redirection standard output with append.  
+- `2\>`: redirection standard error.  
+
+
 
 Redirecting standard output and standard error to one file.  
 The direction of standard error must always occur after redirecting standard output or it doesn't work.  
@@ -66,11 +195,37 @@ disposing of unwanted output
 ls -l /bin/usr 2> /dev/null
 ```
 
->file description  
+redirecting standard output and standard error to one file
+```
+ls -l /bin/usr/ > ls-output 2>&1
+
+ls -l /bin/usr &> ls-output
+```
+
+The redirection of standard error must always occur after redirecting standard output or it doesn't work.
+
+
+**file description**  
 
 >>standard input: 0  
 >>standard output: 1  
 >>standard error: 2  
+
+
+**Pipelines**  
+```
+command1 | command2
+
+ls -lh /usr/bin | less
+```
+
+**The difference between > and |**  
+The direction operator connects a command with a file while the pipeline operator connects the ouput of one command with the input of a second command.  
+```{bash}
+ls -lh /usr/bin | head
+```
+
+
 
 
 # expansion  
