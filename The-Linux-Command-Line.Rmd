@@ -554,7 +554,7 @@ ps aux | head -n 5
 The shell maintains a body of information during our shell session called the environment. Data stored in the environment is used by programs to determine facts about our configuration. While most programs use configuration files to store program settings, some programs will also look for values stored in the environment to adjust their behavior.  
 
 The shell stores two basic types of data in the environment:  
-- environment variables: environment varibales are basically everything else.  
+- environment variables: environment variables are basically everything else.  
 - shell variables: shell variables are bits of data placed there by bash.  
 
 In addition to variables, the shell also stores some programmatic data, namely *aliases* and *shell functions*.  
@@ -736,6 +736,22 @@ dpkg --search file_name
 ```
 
 # Storage Media
+1. `mount`: mount a file system.  
+```{bash}
+# mount without argument will display a list of the file systems currently mounted
+mount
+```
+
+2. `umount`: unmount a file system.  
+3. `fsck`: check and repair a file system.  
+4. `fdisk`: partition table manipulator.  
+5. `mkfs`: crete a file system.  
+6. `fdformat`: format a floppy disk.  
+7. `dd`: write block oriented data directly to a device.  
+8. `genisoimage (mkisofs)`: create an ISO 9660 image file.  
+9. `wodim (cdrecord)`: write data to optical storage media.  
+10. `md5sum`: calculate an MD5 checksum.  
+
 
 
 
