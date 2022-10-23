@@ -456,6 +456,149 @@ The shell stores two basic types of data in the environment:
 |`/etc/bash.bashrc`|A global configuration script that applies to all users.|
 |`~/.bashrc`|A user's personal startup file. Can be used to extend or override settings in the global configuration script.|
 
+# vim
+- open file with vim, if file doesn't exist it will create one  
+```
+vim file
+```
+
+- quit vim
+```
+:q  # if changes not saved a prompte will appearse
+:q! # without save changes
+```
+
+- enter edition mode
+```
+i : edition at the cursor
+a : edition at the end of the line
+```
+
+- save changes
+```
+:w
+ZZ save and exit vim
+:wq the combination of :q and :w
+```
+
+- delete line
+```
+dd  : delete the current line
+5dd : delete the current line and the following 4 lines
+```
+
+- search line 
+```
+f + text: fa search a at the current line
+semicolon for the next match
+```
+
+- search the file
+```
+/ + text + ENTER: /an search an at the entire file
+n for the next following appearence of the searched text
+N for the next foward appearence of the searched text
+```
+
+- edit multiple files
+```
+vim file1 file2 file3 ...
+```
+
+- switching between files
+```
+:n - next file
+:N - previous file
+:buffers - list all opened files
+:buffer 2 - switch to the second file
+```
+
+- open additional file for edition
+```
+:e + file-for-edition
+```
+
+- copy a line
+```
+yy
+```
+
+- paste
+```
+p: paste after the cursor
+ctrl + p: paste before the cursor
+```
+
+- inserting an entire file into another
+```
+:r foo: read the entire foo file into the current file
+```
+
+# package management
+**The most important determinant of distribution quality is the packaging system and the vitality of the distribution's supported community.**
+
+Package management is an method of installing and maintaining software on the system.
+
+Different distribution use different packaging systems and as a general rule, a package intended for one distribution is not compatible with another distribution.
+
+Most distribution fall into one or two camps of packaging technologies: the Debain '.deb' camp and the Red Hat '.rpm' camp.
+
+### package files
+The basic unit of software in a packaging system is the *package file*. A package file is a compressed collection of files that comprise the software package. A package may consist of numerous programs and data files that support the programs.
+
+
+### find a package in a repository
+```
+apt-get update
+apt-cache search search_string
+```
+
+### installing a package from a repository
+```
+apt-get update ; apt-get install package_name
+
+dpkg --install package_file
+```
+
+### removing a package
+```
+apt-get remove package_name
+```
+
+### updating package from a repository
+```
+apt-get update ; apt-get upgrade
+
+dpkg --install package_file
+```
+
+### listing installed packages
+```
+dpkg --list
+```
+
+
+### determining if a package is installed
+```
+dpkg --status package_name
+```
+
+
+### displaying info about an installed package
+```
+apt-cache show package_name
+```
+
+### finding which package installed a file
+```
+dpkg --search file_name
+```
+
+# Storage Media
+
+
+
+
 
 # Searching files
 - locate: performs a rapid database search of pathnames, and outputs every name that matches a given substring.  
