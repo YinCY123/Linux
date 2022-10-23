@@ -165,18 +165,17 @@ cd /usr; ls -lh; cd -
     - `cat *.tiff > merge.tiff`.  
 - `sort`: sort lines of text.  
 - `uniq`: report or omit repeated lines.  
-- `grep`: print lines matching a pattern.  
+- `grep`: print lines matching a pattern, when `grep` encounters a 'pattern' in the file, it prints out the lines containing it.  
     - `grep pattern [file...]`  
 
 - `wc`: print newlines, word and byte counts for each file.  
 - `head`: Output the first part of a file.    
 - `tail`: Output the last part of a file.  
-- `tee`: read from standard input and write to standard output and files.  
-- `echo`  
+- `tee`: read from standard input and write to standard output and files. Allowing the data to continue down the pipeline.   
 - `|`: piplines  
 - `>`: redirection standard output.  
 - `>>`: redirection standard output with append.  
-- `2\>`: redirection standard error.  
+- `2&>`: redirection standard error.  
 
 
 
@@ -199,7 +198,7 @@ redirecting standard output and standard error to one file
 ```
 ls -l /bin/usr/ > ls-output 2>&1
 
-ls -l /bin/usr &> ls-output
+ls -l /bin/usr &> ls-output                                                                                              ,                                                                    
 ```
 
 The redirection of standard error must always occur after redirecting standard output or it doesn't work.
@@ -226,84 +225,134 @@ ls -lh /usr/bin | head
 ```
 
 
+# Seeing the world as the shell sees it 
+1. echo 
 
 
-# expansion  
-- pathname expansion  
-    - ls D*
-
-- tilde expansion  
-    - echo ~; echo ~yincy
-
-- arithmetic expansion use the form: $((expression))  
-    - arithmetic expansion only supports integers, but can perform a number of different operations.  
-    
-- brace expansion  
-    - mkdir front-{A,B,C}-Back; mkdir {2001..2010}-{01..12}
-
-- parameter expansion  
-    - echo $USER  
-    
-- command substitution  
-    - `echo $(ls)`; `ls -lh $(which cp)`  
-
-- quoting  
-    - Double quotes: if you place text inside double quotes, all the special characters used by the shell lose their special meaning and are treated as ordinary characters. The exceptions are "$", "\", and "`". This means that word-splitting, pathname expansion, tilde expansion, and brce expansion are suppressed, but parameter expansion, arithmetic expansion, and command substitutions are still carried out.  
-    - Single quotes: suppress all expansions.  
-
-
+## expansion  
+### pathname expansion  
+```{bash}
+ls -dl /home/yincy/D*
 ```
-> echo text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
-# text /home/yincy/*.txt a b foo 4 yincy
 
-> echo "text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER"
-# text ~/*.txt {a,b} foo 4 yincy
 
-> echo 'text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER'
-# text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER
+### tilde expansion  
+```{bash}
+echo ~
+echo ~yincy
+```
+
+### arithmetic expansion use the form: $((expression))  
+```{bash}
+echo $((2 + 2))
+echo $(($((5**2)) * 3))
+echo $(((5**2) * 3))
+
+echo five divided by two equals $((5/2))
+echo with $((5%2)) left over
+```
+arithmetic expansion only supports integers, but can perform a number of different operations.  
+
+**supported arithmetic Operations**  
+|:--|:--|
+|`+`| addition|
+|`-`| subtraction|
+|`*`| Multiplication|
+|`/`| division (the results are integers).|
+|`%`| modulo, which simply means 'remainder'.|
+|`**`| exponentiation|
+
+
+
+### brace expansion  
+```{bash}
+echo fornt-{A,B,C}-back
+echo number_{1..5}
+echo {01..15}
+echo {001..15}
+echo {z..a}
+echo {Z..A}
+echo a{A{1,2},B{3,4}}b
+```
+
+
+### parameter expansion  
+```{bash}
+echo $USER
+```
+
+
+### command substitution
+Command substitution allows us to use the output of a command as an expansion.  
+```{bash}
+echo $(ls -l)
+ls -lh $(which cp)
+
+file $(ls -d /usr/bin/* | grep zip)
+
+# there is an alternative syntax for command substitution
+ls -lh `which cp`
+```
+
+### quoting  
+- Double quotes: if you place text inside double quotes, all the special characters used by the shell lose their special meaning and are treated as ordinary characters. The exceptions are "$", "\", and "`". This means that word-splitting, pathname expansion, tilde expansion, and brace expansion are suppressed, but parameter expansion, arithmetic expansion, and command substitutions are still carried out.  
+
+- Single quotes: suppress all expansions.  
+
+
+```{bash}
+# double quote suppress some character, single quotes suppress all
+> `two words.txt`
+
+ls -l two words.txt
+ls -l "two words.txt"
+
 ```
 
 - `\`: escaping characters  
 
 
-# history  
-- clear: clear the screen  
-- history  
-- !! re-execute the previous command  
-- !77: re-execute the history command 77  
-- Ctrl-r: search history incrementally, press again to find the next matched command  
-- Ctrl-j: copy the line from the searched history to the current command line  
-- Ctrl-c or Ctrl-g quit the history search  
+# Advanced Keyboard Tricks
+1. `clear`: clear the screen  
+2. `history`: display the contents of the history list  
+
+
+## history  
+1. `clear`: clear the screen  
+2. `history`  
+3. `!!`: re-execute the previous command  
+4. `!77`: re-execute the history command 77  
+5. `!string`: repeat last history list item starting with string.  
+6. `!?string`: repeat last history list item containing string.  
+7. `Ctrl-r`: search history incrementally, press again to find the next matched command.  
+8. `Ctrl-j`: copy the line from the searched history to the current command line.  
+9. `Ctrl-c`: or `Ctrl-g` quit the history search.  
 
 
 # permissions  
-- id: display user identity  
-- umask: set the default file permissions when it is created  
-- su: run a shell as another user  
-- sudo: execute a command as another user  
-- chown: change a file's owner  
-    - chown [owner][:[group]] file  
+1. `id`: display user identity.  
+2. `umask`: set the default file permissions when it is created.  
+3. `su`: run a shell as another user.  
+4. `sudo`: execute a command as another user.  
+5. `chown`: change a file's owner.  
+    - `chown [owner][:[group]] file`.  
+6. `chgrp`: change group ownership. (much work can be done by chown)  
+7. `chmod`: change file mode. only the file's owner or the superuser can change the mode of a file or directory.  
+8. `adduser`( recommanded)  
+9. `useradd`  
+10. `groupadd`  
 
-- chgrp: change group ownership. (much work can be done by chown)  
-- chmod: change file mode. only the file's owner or the superuser can change the mode of a file or directory.  
-- adduser( recommanded)  
-- useradd  
-- groupadd  
+
+**File Types**  
+|**Attribute**|**File Type**|
+|:--|:--|
+|`-`| A regular file|
+|`d`| A directory|
+|`l`| A symbolic link. Notice that with symbolic links, the remaining file attributes are always 'rwxrwxrwx' and are dummy values. The real file attributes are those of the file the symbolic link points to.|
+|`c`| A character special file. This file type refers to a device that handles data as a stream of bytes, such as a terminal or modem.|
+|`b`| A block special file. This file type refers to a device that handles data in blocks, such as hard drive or CD-ROM drive.|
 
 
-```{bash}
-# print the default umask
-umask 
-
-> foo.txt
-ls -lh foo.txt  
-rm foo.txt
-
-# set the umask to 0002
-umask 0022
-> foo.txt
-ls -lh foo.txt
-```
 
 ```{r}
 knitr::include_graphics("figures/umask.png")
@@ -316,7 +365,7 @@ The first three permission digits described in page 122 on <the Linux command li
 knitr::include_graphics("figures/permission.png")
 ```
 
-```{r}
+```{r, fig.cap="Permission Attributes"}
 knitr::include_graphics("figures/permission-attributes.png")
 ```
 
@@ -324,24 +373,60 @@ knitr::include_graphics("figures/permission-attributes.png")
 knitr::include_graphics("figures/permission-examples.png")
 ```
 
+`chmod` supports two distinct ways of specifying mode changes: octal number representation, or symbolic representation.  
+
+**File Modes In Binary and Octal**  
 |**Octal**|**Binary**|**File Mode**|  
 |:--|:--|:--|
-|0|000|---|
-|1|001|--x|
-|2|010|-w-|
-|3|011|-wx|
-|4|100|r--|
-|5|101|r-x|
-|6|110|rw-|
-|7|111|rwx|
+|`0`|000|---|
+|`1`|001|--x|
+|`2`|010|-w-|
+|`3`|011|-wx|
+|`4`|100|r--|
+|`5 = 4 + 1`|101|r-x|
+|`6 = 4 + 2`|110|rw-|
+|`7 = 4 + 3`|111|rwx|
 
 
+**chmod Symbolic Notation**  
 |**Symbol**|**Meaning**|
 |:--|:--|
-|u|short for 'user' but means the file or directory owner.|
-|g|group owner|
-|o|short for 'others', but means world.|
-|a|short for 'all'. The combination of 'u', 'g' and 'o'.|
+|`u`|short for 'user' but means the file or directory owner.|
+|`g`|group owner|
+|`o`|short for 'others', but means world.|
+|`a`|short for 'all'. The combination of 'u', 'g' and 'o'.|
+
+```{r}
+knitr::include_graphics("figures/chmod-symbolic-notation-examples.png")
+```
+
+```{bash}
+> test.txt
+ls -lh test.txt
+
+chmod 400 test.txt
+ls -lh test.txt
+
+chmod 700 test.txt
+ls -lh test.txt
+
+rm test.txt
+```
+
+
+
+```{bash}
+> foo.txt
+
+ls -lh foo.txt
+chmod u+x,go=rw foo.txt
+ls -lh foo.txt
+
+chmod go-w foo.txt
+ls -lh foo.txt
+
+rm foo.txt
+```
 
 
 ```{r}
@@ -354,7 +439,7 @@ knitr::include_graphics("figures/permission-example-1.png")
 > multiple specifications separated by commas.  
 
 
-# file type  
+## file type  
 - `-`: a regular file  
 - `d`: a directory  
 - `l`: a symbolic link. with symbolic links, the remaining file attributes are always 'rwxrwxrwx'  
@@ -362,49 +447,80 @@ knitr::include_graphics("figures/permission-example-1.png")
 - `b`: a block special file. This file type refers to device that handles data in blocks, such as a hard drive or CD-ROM drive.  
 
 
-# changing identities
-- su: allows you to assume the identity of another user  
-- sudo: allows an administrator to set up a configuration file called /etc/sudoers, and define specific commands that particular users are permitted to execute under an assumed identity.  
+## changing identities
+- `su`: allows you to assume the identity of another user  
+- `sudo`: allows an administrator to set up a configuration file called /etc/sudoers, and define specific commands that particular users are permitted to execute under an assumed identity.  
+
+The syntax of `chown`  
+```
+chown [owner][:[group]] file...
+```
 
 
-# change password
-- password: enter the password to change your password, if you have superuser privileges, you can specify a username as an argument to the password command to set the password for another user.  
+**`chown` argument examples**
+
+|**Argument**|**Results**|
+|:--|:--|
+|`bob`|changes the ownership of the file from its current owner to user bob|
+|bob:users|changes the ownership of the file from its current owner to user bob and changes the file group owner to group users|
+|`:admins`|changes the group owner to the group admins. The file owner is unchanged.|
+|`bob:`|changes the file owner from the current owner to user bob and changes the group owner to the login group of user bob.|
 
 
-# processes
+## change password
+1. `password`: enter the password to change your password, if you have superuser privileges, you can specify a username as an argument to the password command to set the password for another user.  
+
+```
+passwd [user]
+```
+
+
+## processes
 Processes are how Linux organizes the different programs waiting for their turn at the CPU.  
 
-- ps: report a snapshot of current processes, just the processes associated with the current terminal session  
-    - ps; ps x; ps aux  
+1. `ps`: report a snapshot of current processes, just the processes associated with the current terminal session.  
+```{bash}
+ps aux | head -n 5
+```
 
-- top: display tasks  
-- jobs: list active jobs  
-- bg: place a job in the background  
+
+2. `top`: display tasks  
+3. `jobs`: list active jobs  
+
+### Putting a process in the background
+4. `bg`: place a job in the background  
     - bg gedit &; bg notepad-plus-plus &  
 
-- fg: place a job in the foreground  
+### returning a process to the foreground
+5. `fg`: place a job in the foreground  
     - with the fg command, the jobspec is optional if there is only one job  
     - fg %1; fg 2%  
 
-- Ctrl-z: stopping a process  
-- Ctrl-c: interrupts a program, terminate a program  
-- kill: send a signal to a process  
+### Stopping (Puasing) A Process 
+6. `Ctrl-z`: stopping a process  
+
+### Interrupting a process
+7. `Ctrl-c`: interrupts a program, terminate a program  
+
+## Signals
+8. `kill`: send a signal to a process  
     - kill [-signal] PID  
     - kill PID; kill %[:digit:] (kill an background running program)  
+
 
 **Common Signals**  
 |**Number**|**Name**|**Meaning**|
 |:--|:--|:--|
-|1|HUP|Hangup. The signal is used to indicate to programs that the controlling terminal has "hung up". The effect of this signal can be demonstrated by closing a terminal session. The foreground program running on the terminal will be sent the signal and will terminate.|
-|2|INT|Interrupt. Performs the same as the Ctrl-c key sent from the terminal. It will usually terminate a program.|
-|3|QUIT|Quit|
-|9|KILL|Kill. This signal is special. Whereas programs may choose to handle signals sent to them in different ways, including ignoring them in different ways, including ignoring them all together, the KILL signal is never actually sent to the target program. Rather, the kernel immediately terminates the process. When a process is terminated in this manner, it is given no opportunity to 'clean up' after itself or save its work. For this reason, the KILL signal should only be used as a last resort when other termination signals fail.|
-|11|SEGV|Segmentation Violation. This signal is sent if a program makes illegal use of memory, that is, it tried to write somewhere it was not allowed to.|
-|15|TERM|Terminate. This is the default signal sent by the kill command. If a program is still 'alive' enough to receive signals, it will terminate.|
-|18|CONT|Continue. This will restore a process after a STOP signal.|
-|19|STOP|Stop. This signal causes a process to pause without terminating. Like the KILL signal, it is not sent to the target process, and thus it cannot be ignored.|
-|20|TSTP|Terminal Stop. This is the signal sent by the terminal when the Ctrl-z key is pressed. Unlike the STOP signal, the TSTP signal is received by the program but the program may choose to ignore it.|
-|28|WINCH|Window Change. This is a signal sent by the system when a window changes size. Some programs, like top and less will respond to this signal by redrawing themselves to fit the new window dimensions.|
+|`1`|HUP|Hangup. The signal is used to indicate to programs that the controlling terminal has "hung up". The effect of this signal can be demonstrated by closing a terminal session. The foreground program running on the terminal will be sent the signal and will terminate.|
+|`2`|INT|Interrupt. Performs the same as the Ctrl-c key sent from the terminal. It will usually terminate a program.|
+|`3`|QUIT|Quit|
+|`9`|KILL|Kill. This signal is special. Whereas programs may choose to handle signals sent to them in different ways, including ignoring them in different ways, including ignoring them all together, the KILL signal is never actually sent to the target program. Rather, the kernel immediately terminates the process. When a process is terminated in this manner, it is given no opportunity to 'clean up' after itself or save its work. For this reason, the KILL signal should only be used as a last resort when other termination signals fail.|
+|`11`|SEGV|Segmentation Violation. This signal is sent if a program makes illegal use of memory, that is, it tried to write somewhere it was not allowed to.|
+|`15`|TERM|Terminate. This is the default signal sent by the kill command. If a program is still 'alive' enough to receive signals, it will terminate.|
+|`18`|CONT|Continue. This will restore a process after a STOP signal.|
+|`19`|STOP|Stop. This signal causes a process to pause without terminating. Like the KILL signal, it is not sent to the target process, and thus it cannot be ignored.|
+|`20`|TSTP|Terminal Stop. This is the signal sent by the terminal when the Ctrl-z key is pressed. Unlike the STOP signal, the TSTP signal is received by the program but the program may choose to ignore it.|
+|`28`|WINCH|Window Change. This is a signal sent by the system when a window changes size. Some programs, like top and less will respond to this signal by redrawing themselves to fit the new window dimensions.|
 
 - killall: sending signals to multiple processes  
     - killall [-u user] [-signal] name ...  
@@ -416,37 +532,62 @@ Processes are how Linux organizes the different programs waiting for their turn 
 **process related commands**  
 |**Command**|**Description**|
 |:--|:--|
-|pstree|Outputs a process list arranged in a tree-like pattern showing the parent/child relationships between processes.|
-|vmstat|Outputs a snapshot of system resource usage including memory, swap and disk I/O. To see a continuous display, follow the command with a time delay (n seconds) for updates.|
-|xload|A graphical program that draws a graph showing system load over time.|
-|tload|Similar to the xload program, but draws the graph in the terminal.|
+|`pstree`|Outputs a process list arranged in a tree-like pattern showing the parent/child relationships between processes.|
+|`vmstat`|Outputs a snapshot of system resource usage including memory, swap and disk I/O. To see a continuous display, follow the command with a time delay (n seconds) for updates.|
+|`xload`|A graphical program that draws a graph showing system load over time.|
+|`tload`|Similar to the xload program, but draws the graph in the terminal.|
 
 
 **Process States**  
 |**State**|**Meaning**|  
 |:--|:--|
-|R|Runing. This means that the process is running or ready to run.|  
-|S|Sleeping. The process is not running; rather, it is waiting for an event, such as a keystroke or network packet.|
-|D|Uninterruptible Sleep. Process is waiting for I/O such as disk drive.|
-|T|Stopped. Process has been instructed to stop.|
-|Z|A defunct or 'zombie' process. This is a child process that has terminated, but has not been cleaned up by its parent.|
-|<|A high priority process. It's possible to grant more importance to a process, giving it more time on the CPU. This property of a process is called niceness. A process with high priority is said to be less nice because it's taking more of the CPU's time, which leaves less for everybody else.|
-|N|A low priority process. A process with low priority (a 'nice' process) will only get processor time after other processes with higher priority have been serviced.|
+|`R`|Runing. This means that the process is running or ready to run.|  
+|`S`|Sleeping. The process is not running; rather, it is waiting for an event, such as a keystroke or network packet.|
+|`D`|Uninterruptible Sleep. Process is waiting for I/O such as disk drive.|
+|`T`|Stopped. Process has been instructed to stop.|
+|`Z`|A defunct or 'zombie' process. This is a child process that has terminated, but has not been cleaned up by its parent.|
+|`<`|A high priority process. It's possible to grant more importance to a process, giving it more time on the CPU. This property of a process is called niceness. A process with high priority is said to be less nice because it's taking more of the CPU's time, which leaves less for everybody else.|
+|`N`|A low priority process. A process with low priority (a 'nice' process) will only get processor time after other processes with higher priority have been serviced.|
 
 
-# Environment
+# The Environment
 The shell maintains a body of information during our shell session called the environment. Data stored in the environment is used by programs to determine facts about our configuration. While most programs use configuration files to store program settings, some programs will also look for values stored in the environment to adjust their behavior.  
 
 The shell stores two basic types of data in the environment:  
-- environment variables  
-- shell variables  
+- environment variables: environment varibales are basically everything else.  
+- shell variables: shell variables are bits of data placed there by bash.  
+
+In addition to variables, the shell also stores some programmatic data, namely *aliases* and *shell functions*.  
 
 ***
 
-- printenv: print part or all of the environment, show only environment variable  
-- set: set shell options, show both shell and environment x cvvariables  
-- export: export environment to subsequently executed programs  
-- alias: create an alias for a command  
+1. `printenv`: print part or all of the environment, show only environment variable  
+```{bash}
+# print all environment variable
+printenv
+
+# print specific environment variable
+printenv USER
+```
+
+
+2. `set`: set shell options, show both shell and environment variables  
+```{bash}
+# print shell and environment variable and any defined shell functions
+set
+
+# view the contents of a variable
+echo $HOME
+```
+
+3. `export`: export environment to subsequently executed programs  
+4. `alias`: create an alias for a command  
+```{bash}
+# alias element doesn't displayed by set or printenv
+
+alias
+```
+
 
 
 **Startup files for login shell sessions**  
