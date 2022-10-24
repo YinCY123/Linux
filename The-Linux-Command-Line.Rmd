@@ -740,11 +740,19 @@ dpkg --search file_name
 ```{bash}
 # mount without argument will display a list of the file systems currently mounted
 mount
+
+# change mount point
+mount -t vfat /dev/sdb1 /mnt/usb
 ```
 
-2. `umount`: unmount a file system.  
+2. `umount`: umount a file system.  
 3. `fsck`: check and repair a file system.  
 4. `fdisk`: partition table manipulator.  
+```{bash}
+sudo umount /dev/sdb1
+sudo fdisk /dev/sdb
+```
+
 5. `mkfs`: crete a file system.  
 6. `fdformat`: format a floppy disk.  
 7. `dd`: write block oriented data directly to a device.  
@@ -753,6 +761,30 @@ mount
 10. `md5sum`: calculate an MD5 checksum.  
 
 
+# Networking
+When is comes to networking, there is probably nothing that cannot be done with Linux. Linux is used to build all sorts of networking systems and applicances, including firewalls, routers, name servers, NAS (Network Attached Storage) boxes and on and on.
+
+1. `ping` - send an ICMP ECHO_REQUEST to network hosts.  
+```{bash}
+ping linuxcommand.org
+```
+
+2. `traceroute` - displays a listing of all the 'hops' network traffic takes to get from the local system to a specified host.  
+```{bash}
+traceroute slashdot.org
+```
+
+3. `netstat` - print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships.  
+```{bash}
+netstat -ie
+```
+
+4. `ftp` - internet file transfer program.  
+5. `wget` - Non-interactive network downloader.  
+6. `ssh` - OpenSSH SSH client (remote login program).  
+7. IP (Internet Protocol) address.  
+8. Host and domain name.  
+9. URI (Uniform Resource Identifier).  
 
 
 
