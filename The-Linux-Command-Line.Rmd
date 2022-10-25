@@ -599,85 +599,152 @@ dpkg --search file_name
 
 
 
-
 # Searching files
-- locate: performs a rapid database search of pathnames, and outputs every name that matches a given substring.  
-    - locate bin/zip  
-- find: search for files in a directory hierarchy  
-    - find ~ -type d; find ~ -type f  
-    
-**File Types**  
-|**File type**|**Description**|
+1. `locate`: find files by name.  
+The `locate` program performs a rapid database search of *pathnames*, and then outputs every name that matches a given substring.  
+```{bash}
+locate bin/zip
+
+# update the data base if locate does not work
+updatedb
+```
+
+2. `find`: search a given directory (and its subdirectories) for files based on a variety of attributes.   
+
+The beauty of `find` is that is can be used to identify files that meet specific criteria. It does this through the application of *options*, *test*, and *actions*.
+
+**test**  
+```{bash}
+# list directories in a directory
+find ~ -type d
+
+# list files in a directory
+find ~ -type f
+
+find ~ -type file -name '*.png' -size +1K | wc -l
+```
+
+**file types**
+|**File Type**|**Description**|
 |:--|:--|
-|b|Block special deviece file|
-|c|Character special device file|
-|d|Directory|
-|f|Regular file|
-|l|Symbolic link|
+|`b`|black special device file|
+|`c`|character special device file|
+|`d`|directory|
+|`f`|regular file|
+|`l`|symbolic link|
 
-
-## find
-### test
+**Other test**
 |**Test**|**Description**|
 |:--|:--|
-|-cmin n|Match files or directories whose **content or attributes** were last modified exactly n minutes ago.|
-|-ctime n|Match files or directories whose **contents or attributes** were last modified n*24 hours ago.|
-|mmin n|Match files or directories whose **contents** were last modified n minutes ago.|
-|mtime n|Match files or directories whose **contents** were last modified n*24 hours ago.|
-|-atime n|File was last **accessed** n*24 hours ago.|
-|-amin n|File was last **accessed** n minutes ago.|
-|-cnewer file|Match files or directories whose **contents or attributes** were last modified more recently than those of file.|
-|-newer file|Match files and directories whose **contents** were modified more recently than the specified file.|
-|-size n|Match files of size n.|
-|-type c|Match files of type c.|
-|-user name|Match files or directories belonging to user name.|
-|-perm mode|Match files or directories that have permissions set to the specified mode.|
-|nogroup|Match files or directories that have permissions set to the specified mode.|
-|nouser|Match file and directories that do not belong to a valid user.|
-|-name pattern|Match files and directories with the specified wildcard pattern.|
-|-iname pattern|Like the -name test but case insensitive.|
-|-group name|Match file or directories belonging to group.|
-|-empty|Match empty files and directories.|
-|-inum n|Match files with inode number n. This is helpful for finding all the hard links to a particular inode.|
-|-samefile name|Similar to the -inum test. Matches files that share the same inode number as file name.|
+|`-cmin n`|Match files or directories whose **content or attributes** were last modified exactly n minutes ago.|
+|`-ctime n`|Match files or directories whose **contents or attributes** were last modified n*24 hours ago.|
+|`mmin n`|Match files or directories whose **contents** were last modified n minutes ago.|
+|`-mtime n`|Match files or directories whose **contents** were last modified n*24 hours ago.|
+|`-atime n`|File was last **accessed** n*24 hours ago.|
+|`-amin n`|File was last **accessed** n minutes ago.|
+|`-cnewer file`|Match files or directories whose **contents or attributes** were last modified more recently than those of file.|
+|`-newer file`|Match files and directories whose **contents** were modified more recently than the specified file.|
+|`-size n`|Match files of size n.|
+|`-type c`|Match files of type c.|
+|`-user name`|Match files or directories belonging to user name.|
+|`-perm mode`|Match files or directories that have permissions set to the specified mode.|
+|`-nogroup`|Match files or directories that have permissions set to the specified mode.|
+|`nouser`|Match file and directories that do not belong to a valid user.|
+|`-name pattern`|Match files and directories with the specified wildcard pattern.|
+|`-iname pattern`|Like the -name test but case insensitive.|
+|`-group name`|Match file or directories belonging to group.|
+|`-empty`|Match empty files and directories.|
+|`-inum n`|Match files with inode number n. This is helpful for finding all the hard links to a particular inode.|
+|`-samefile name`|Similar to the -inum test. Matches files that share the same inode number as file name.|
 
-***
+> a: file accessed
+c: change of file's status
+m: file's data modified
 
-### operators
+**operators**  
 provide logical relationships between the test.  
+```{bash}
+# (expression 1) -or (expression 2)
+find ~ \( -type f -not -perm 0600 \) -or \( -type d -not -perm 0700 \)
+```
+
+In all cases, *expr1* will always be performed; however, the operator will determine if *expr2* will performed.
+
+|**Results of expr1**|**Operator**|**expr2**|
+|:--|:--|:--|
+|`True`| -and| always performed|
+|`False`| -and| nerver performed|
+|`True`| -or| nerve performed|
+|`False`| -or| always performed|
+
 
 |**Operator**|**Description**|
 |:--|:--|
-|-and|Match if the tests on both sides of the operator are true. May be shortened to -a.|
-|-or|Match if a test on either side of the operator is true. May be shortened to -o.|
-|-not|Match if the test following the operator is false. May be abbreviated with an exclamation point (!).|
-|()|Groups tests and operators together to form larger expressions.|
+|`-and`|Match if the tests on both sides of the operator are true. May be shortened to -a.|
+|`-or`|Match if a test on either side of the operator is true. May be shortened to -o.|
+|`-not`|Match if the test following the operator is false. May be abbreviated with an exclamation point (!).|
+|`()`|Groups tests and operators together to form larger expressions.|
 
-***
 
-### actions
+
+**actions**  
 Having a list of results from find command but what we really want to do is performed by predefined action parameters.  
 
 |**Action**|**Description**|
 |:--|:--|
-|-delete|delete the currently matching file.|
-|-ls|perform the equivalent of `ls -dils` on the matching file.|
-|-print|output the full pathname of the matching file to standard output.This is the default action.|
-|-quit|quit once a match has been made.|
+|`-delete`|delete the currently matching file.|
+|`-ls`|perform the equivalent of `ls -dils` on the matching file.|
+|`-print`|output the full pathname of the matching file to standard output.This is the default action.|
+|`-quit`|quit once a match has been made.|
 
-> there are many more action, to the man page for help.
+```{bash}
+find ~ -type f -name '.BAK' -print
+find ~ -type f -name '.BAK' -delete
+```
 
-***
 
-### user-defined actions
--exec command {};  
+**user-defined actions**  
+```{bash}
+# grammar
+-exec command '{}'';'
+
+# where command is the name of a command, {} is a symbolic representation of the current pathname, and the semicolon is a required delimiter indicating the end of the command.
+
+
+# since the brace and semicolon characters have special meaning to the shell, they must be quoted or escaped
+```
+
 
 where command is the name of a command, {} is a symbolic representation of the current pathname, and the semicolon is a required delimiter indicating the end of the command.  
 
-examples to delete matched files  
+```{bash, eval = F}
+find . -type f -name 'so*' -exec ls -lh '{}' ';'
 ```
--exec rm '{}' ';'
+
+*By changing the trailing semicolon character to a plus sign, we activate the ability of `find` to combine the results of the search into an argument list for a single execution of the desired command*. By change ';' to + the system has to execute the ls -l command for only once.
+
+```{bash, eval = F}
+find . -type f -name 'foo*' -exec ls -lh '{}' +
 ```
+
+
+3. `xargs`: The `xargs` command performs an interesting function. It accepts input from standard input and converts it into an argument list for a specified command.  
+```{bash, eval=F}
+find . -type f -name 'foo*' -print | xargs ls -lh
+
+# dealing with bad file names
+find . iname '*.png' -print0 | xargs --null ls -l
+```
+
+While the number of arguments that can be placed into a command line is quite large, it’s not unlimited. It is possible to create commands that are too long for the shell to accept. When a command line exceeds the maximum length supported by the system, `xargs` executes the specified command with the maximum number of arguments possible and then repeats this process until standard input is exhausted.
+
+
+4. `touch`: change file times.  
+5. `stat`: display file or file system status.  
+
+
+
+
 
 > since the brace and semicolon characters ahve special meaning to the shell, they must be quoted or escaped.  
 
