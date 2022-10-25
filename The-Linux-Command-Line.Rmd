@@ -932,53 +932,40 @@ While the number of arguments that can be placed into a command line is quite la
 5. `stat`: display file or file system status.  
 
 
-
-
-
-> since the brace and semicolon characters ahve special meaning to the shell, they must be quoted or escaped.  
-
-It’s also possible to execute a user-defined action interactively. By using the -ok action in place of -exec, the user is prompted before execution of each specified command:  
+**options**  
+The options are used to control the scope of a `find` search.  
+```{bash}
 
 ```
-find ~ -type f -name 'foo*' -ok ls -l '{}' ';'
-```
-
-we search for files with names starting with the string “foo” and execute the command ls -l each time one is found. Using the -ok action prompts the user before the ls command is executed.  
-
-***
-
-- xargs: build and execute command lines from standard input  
-The xargs command performs an interesting function. It accepts input from standard in- put and converts it into an argument list for a specified command.  
-
-```
-find ~ -type f -name 'foo*' -print | xargs ls -lh
-```
-
-### options
-The options are used to control the scope of a find search.  
 
 |**Option**|Description**|
 |:--|:--|
-|-depth|direct find to process a directory's files before the directory itself. This options is automatically applied when the -delete action is specified.|
-|-maxdepth levels|Set the maximum number of levels that find will descend into a directory tree when performing tests and actions.|
-|-mindepth levels|Set the minimum number of levels that find will descend into a directory tree before applying tests and actions.|
-|-mount|direct find not to traverse directories that are mounted on other file systems.|
-|-noleaf|direct find not to optimize its search based on the assumption that it is searching a Unix-like file system. This is needed when scanning DOS/Windows file systems and CD-ROMs.|
+|`-depth`|direct find to process a directory's files before the directory itself. This options is automatically applied when the -delete action is specified.|
+|`-maxdepth levels`|Set the maximum number of levels that find will descend into a directory tree when performing tests and actions.|
+|`-mindepth levels`|Set the minimum number of levels that find will descend into a directory tree before applying tests and actions.|
+|`-mount`|direct find not to traverse directories that are mounted on other file systems.|
+|`-noleaf`|direct find not to optimize its search based on the assumption that it is searching a Unix-like file system. This is needed when scanning DOS/Windows file systems and CD-ROMs.|
 
-***
+# Archiving and backup
+1. gzip: the gzip program is used to compress one or more files. The `gunzip` program is used to restore compressed files to their original.  
+```{bash}
+ls -l /etc > foo.txt
+ls -l foo.txt
 
-- touch: change file times  
-- stat: display file or file system status  
+gzip foo.txt
+ls -lh
+gunzip foo.txt.gz
+ls -lh
 
-
-
-# tar 
-file archiving.  
-
-## syntax
+rm foo*
 ```
-tar mode[options] pathname...
-```
+
+
+2. bzip2
+3. tar
+4. zip
+5. rsync
+
 
 ## tar modes
 |**Mode**|**Description**|
