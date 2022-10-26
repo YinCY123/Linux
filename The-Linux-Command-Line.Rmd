@@ -935,7 +935,7 @@ While the number of arguments that can be placed into a command line is quite la
 **options**  
 The options are used to control the scope of a `find` search.  
 ```{bash}
-
+find . -type f -maxdepth 3 -name 'foo*' -exec ls -l "{}" ";"
 ```
 
 |**Option**|Description**|
@@ -947,7 +947,8 @@ The options are used to control the scope of a `find` search.
 |`-noleaf`|direct find not to optimize its search based on the assumption that it is searching a Unix-like file system. This is needed when scanning DOS/Windows file systems and CD-ROMs.|
 
 # Archiving and backup
-1. gzip: the gzip program is used to compress one or more files. The `gunzip` program is used to restore compressed files to their original.  
+1. `gzip`  
+the `gzip` program is used to compress one or more files. The `gunzip` program is used to restore compressed files to their original.  
 ```{bash}
 ls -l /etc > foo.txt
 ls -l foo.txt
@@ -961,10 +962,109 @@ rm foo*
 ```
 
 
-2. bzip2
-3. tar
-4. zip
-5. rsync
+2. `bzip2`
+The `bzip2` program is similar to `gzip`, but uses a different compression algorithm that achieves higher levels of compression at the cost of compression speed.  
+```{bash}
+ls -l /etc > foo.txt
+bzip2 foo.txt
+
+# uncompression
+bzip2 -d foo.txt.bz2
+bunzip2 foo.txt.bz2
+```
+
+All the options (except for -r) that discussed for `gzip` are also supported in `bzip2`.  
+
+`bzip2` also comes with the `bzip2recover` program, which will try to recover damaged `.bz2` files.
+
+### Archiving Files
+A common file-management task often used in conjunction with compression is archiving. Archiving is the process of gathering up many files and bundling them together into a single large file.  
+
+3. `tar`  
+In the Unix-like world of software, the `tar` program is the classic tool for archiving files. Its name, short for *tape archive*, reveals its roots as a tool for making backup tapes.  
+
+A tar archive can consist of a group of separate files, one or more directory hierarchies, or a mixture of both.  
+
+```
+tar mode[options] pathname ...
+```
+
+**tar mode**  
+
+|**Mode**|**Description**|
+|:--|:--|
+|`c`| Create an archive from a list of files and/or directories|
+|`x`| Extract an archive|
+|`r`| Append specified pathnames to the end of an archive|
+|`t`| List the contents of an archive|
+
+
+```{bash, eval = F}
+# archive a directory
+tar cf   playground.tar playground
+#   mode option         pathname
+
+# the mode must always be specified first, before any other option
+
+# list contents of a archive
+tar tf playground.tar
+
+# extract specified file
+tar xf archve.tar pathname
+# by adding the tailing pathname to the command, tar will only restore the specified file.
+
+# support wildcards
+tar xf archive.tar --wildcards 'pathname'
+
+# conjunction with find
+find playground -name 'file-A' -exec tar rf playgroud.tar '{}' ';'
+
+# speed up, execute tar only once
+find playground -name 'file-A' -exec tar rf playgroud.tar '{}' '+'
+
+# using the pipe and xargs 
+find playground -name 'file-A' | xargs tar cf playground.tar
+
+find playground -name 'file-A' | xargs tar cf playground.tar | gzip > playground.tgz
+
+# tar can internally using gzip or bzip2 wile archiving
+find playground -name 'file-A' | xargs tar cfz playground.tgz
+```
+
+
+4. `zip`  
+The `zip` program is both a compression tool and an archiver.
+
+```
+# syntax
+zip options zipfile file...
+```
+
+```{bash}
+zip -r playground.zip playground
+
+unzip playground.zip
+
+find playground -name 'file-A' | zip -@ 'file-A.zip'
+# pile the find list to -@
+
+ls -l /etc | zip ls.zip -
+# pipe ls -l output to -
+```
+
+If an existing archive is specified, it is updated rather than replaced. This means that the existing archive is preserved, but new file are added and matching files are replaced.
+
+`zip` can accept standard input, and unzip does not accept standard input.
+
+The main use of `zip` and `unzip` program is for exchangeing files with windows system, rather than performing compression and archiving on Linux.
+
+### Synchronizing Files and Directories
+A common strategy for maintaining a backup copy of a system involves keeping one or more directories synchronized with another directory (or directories) located on either the local system or remote system.  
+
+
+5. `rsync`  
+
+
 
 
 ## tar modes
