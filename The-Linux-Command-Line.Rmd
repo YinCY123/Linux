@@ -1307,15 +1307,87 @@ sort foo.txt | uniq -c
 ```
 
 
-4. `cut`: remove sections from each line  of files.  
-```{bash}
+### Slicing And Dicing
+4. `cut`  
+The `cut` program is used to extract a section of text from a line and output extracted section to standard output. It can accept multiple file arguments or input from standard input.  
 
+**cut Selction options**  
+
+|**Option**|**Description**| 
+|:--|:--|
+|`-c char_list`|Extract the portion of the line defined by char_list. The list may consist of one or more comma-separated numerical ranges.|
+|`-f field_list`|Extract one or more fields from the line as defined by field_list. The list may contain one or more fields or field ranges separated by columns.|
+|`-d delim_char`|When -f is specified, use *delim_char* as the field delimiting character. By default, fields must be separated by a single tab character.|
+|`--complement`|Extract the entire line of text, except for those portions specified by -c and/or -f.|
+
+
+```{bash}
+# extract the 3rd column from the os file
+cut -f 3 os
+
+# extract the year
+cut -f 3 os | cut -c 7-10
+
+# expand tabs to space
+expand os | cut -c 23- -
+
+# there is also unexpand for substitute tabs for space
+expand os | unexpand
 ```
 
 5. `paste`: merge lines of files.  
+The `paste` command does the opposite of `cut`. Rather than extracting a column of text from a file, it adds one or more columns of text to a file.  
+
+```{bash, eval=F}
+paste os-date os-version
+```
+
+
 6. `join`: join lines of two files on a common field.  
-7. `comm`: Compare two sorted files line by line.  
-8. `diff`: Compare files line by line.  
+In some ways, `join` is like `paste` in that it adds columns to a file, but it uses a unique way to do it. A join is an operation usually associated with `relational database` where data from multiple tables with a shared key fields is combined to form a desired result.
+
+The join program performs the same operation. It joins data from multiple files based on a shared key field.  
+
+```{bash, eval=F}
+# join files by shared key column
+join os-key-name os-key-version
+```
+
+### Comparing text
+7. `comm`: compares two files and displays the lines that are unique to each one and the lines they have in common.  
+
+```{bash}
+comm file1 file2
+
+# suppress output the first two fields
+comm -12 file1 file2
+```
+
+
+8. `diff`: used to detect the differences between files. However, diff is a much more complex tool, supporting many output formats and the ability to process large collections of text files at once.
+
+**diff change commands**  
+
+|**Change**|**Description**|
+|:--|:--|
+|`r1ar2`|append the lines at the position r2 in the second file to the position r1 in the first file.|
+|`r1cr2`|change(replace) the lines at position r1 with the lines at the position r2 in the second file.|
+|`r1dr2`|delet the lines in the first file at position r1, which would have appeared at range r2 in the second file.|
+
+
+```{bash}
+# the default out put format
+diff file1 file2
+
+# the context output format
+diff -c file1 file2
+
+# the unified output format
+diff -u file1 file2
+```
+
+
+
 9. `patch`: apply a diff file to an original.  
 10. `tr`: translate or delete characters.  
 11. `sed`: stream editor for filtering and transforming text.  
