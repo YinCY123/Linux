@@ -1364,7 +1364,7 @@ comm -12 file1 file2
 ```
 
 
-8. `diff`: used to detect the differences between files. However, diff is a much more complex tool, supporting many output formats and the ability to process large collections of text files at once.
+8. `diff`: used to detect the differences between files. However, `diff` is a much more complex tool, supporting many output formats and the ability to process large collections of text files at once.
 
 **diff change commands**  
 
@@ -1388,10 +1388,199 @@ diff -u file1 file2
 
 
 
-9. `patch`: apply a diff file to an original.  
-10. `tr`: translate or delete characters.  
-11. `sed`: stream editor for filtering and transforming text.  
-12. `aspell`: interactive spell checker.  
+9. `patch`  
+The `patch` program is used to apply changes to text file. It accepts output from `diff` and is generally used to convert older version of files into newer version.
+
+```{bash, eval = F}
+# syntax
+diff -Naur old_file new_file > diff_file
+
+# where old_file and new_file are either single files or directories containing files. The r option supports recursion of a dirctory tree.
+
+# apply the change to file1
+# file1 will be identical to file2
+patch < diff_file
+```
+
+
+### editing on the fly
+10. `tr`  
+translate or delete characters.  
+```{bash, eval=F}
+# syntax
+tr option... SET1 SET2
+
+# replace lowercase letter with uppercase letter
+echo 'lowercase letter' | tr a-z A-Z
+echo 'lowercase letter' | tr [:lower:] [:upper:]
+
+
+# delete
+echo 'lowercase letter' | tr -d 'abc'
+
+# delete repeated sequence, the repeate must adjoining
+echo 'aaabbbccc' | tr -s ab
+```
+
+
+`tr` accepts two arguments: a set of characters to convert from and a corresponding set of charcatersto convert to.  
+
+Character sets may be expressed in one of the three ways:
+
+- An enumerated list. for example ABCDEF  
+- A character range. for example a-z  
+- POSIX character classes. for example [:upper:]  
+
+In most case, both character sets should be equal length; however, it is possible for the first set to be larger than the second, particularly if we wish to convert multiple characters to a single character.
+
+11. `sed`  
+The name `sed` is short for *stream editor*. It performs text editing on a stream of text, either a set of specified files or standard input.  
+
+`sed` is a powerful and somewhat complex program (there are entire books about it).  
+
+```{bash}
+# search and replace
+echo 'front' | sed 's/front/back'
+echo 'front' | sed 's_front_back'
+
+
+# most commands in `sed` may be preceded by an *address*, which specifies which line(s) of the input stream will be edited.
+
+echo 'front' | sed '1s_front_back'
+
+# print the first 5 lines
+sed -n '1,5p' os
+
+# print lines that contains SUSE
+sed -n '/SUSE/p' os
+
+# print lines that do not contains SUSE
+sed -n '/SUSE/!p' os
+
+# transform
+# syntax
+sed 's/regexp/replacement/' file
+
+sed 's/\([0-9]\{2\}\)\/\([0-9]\{2\}\)/\([0-9]\{4\}\)$/\3-\1-\2-/' os
+
+sed 'aaabbbccc' | sed 's/b/B'
+sed 'aaabbbccc' | sed 's/b/B/g'
+
+sed -i 's/lazy/laxy/; s/jumped/jimped/' foo.txt
+
+sed -i 's/Ubuntu/ubuntu/' os
+```
+
+
+**sed Address Notation**  
+
+|**Address**|**Description**|
+|:--|:--|
+|`n`| a line number|
+|`$`| the last line|
+|`/regexp/`| lines matching a POSIX basic regular expression|
+|`adde1, addr2`| a range of lines from addr1 to ddr2, inclsive|
+|`first~step`| match the line represented by the number first, then each subsequent line at step interval.|
+|`addr1,+n`| match addr1 and the following n lines.|
+|`addr!`| match all lines except addr, which may be any of the froms.|
+
+
+
+12. `aspell`  
+spelling checker.  
+
+```{bash}
+aspell check textfile
+
+aspell check -H html_file
+```
+
+
+# Formatting Output
+1. `nl`: number lines.  
+```{bash}
+nl os
+
+# like 
+cat -n
+
+# like cat, nl can accept either multiple files as command line arguments, or standard input.
+
+ls -l | nl
+```
+
+2. `fold`: Wrap each line to a specified length.  
+```{bash}
+# the default width is 80
+echo "The brown fox jumped over the lazy dog." | fold -w 12
+
+# the s option will avoid break in words
+echo "The brown fox jumped over the lazy dog." | fold -w 12 -s
+```
+
+
+3. `fmt`  
+`fmt` accepts either files or standard input and performs paragraph formatting on the text stream. Basically, it fills and joins lines in text while preserving blank lines and indentation.  
+
+```{bash}
+
+```
+
+
+4. `pr`  
+The `pr` program is used to paginate text.  
+```{bash}
+# page length 15 lines, page width 65 columns
+pr -l 15 -w 65 os
+```
+
+
+5. `printf`: format and print data.  
+```{bash}
+# syntax
+printf 'foramt' arguments
+
+printf "I formatted '%s' as a string.\n" foo
+
+printf "%+d, %.3f, %o\n" 380 380 380
+```
+
+**Common printf Data Type Specifiers**  
+
+|**Specifier**|**Description**|
+|:--|:--|
+|`d`| format a number as a signed decimal integer.|
+|`f`| format and output a floating point number.|
+|`o`| format an integer as an octal number.|
+|`s`| format a string.|
+|`x`| format an integer as hexadecimal number using lowercase a-f where needed|
+|`X`| Same as x but use uppercase letters.|
+|`%`| Print a literal % symbol.|
+
+
+###Document Formatting Systems
+
+6. `groff`: a document formatting system.  
+
+
+# Printing  
+1. `pr`  
+2. `lpr`  
+3. `a2ps`  
+4. `lpstat`  
+5. `lpq`  
+6. `lprm`  
+
+
+# Compiling Programs
+Why compile software?
+
+- **Availability**. Despite the number of precompiled programs in distribution repositories, some ditributions may not include all the desired applications. In this case, the only way to get the desired program is to compile it from source.  
+
+- **Tomelines** While some distributions specialize in cutting edge versions of program, many do not. This means that in order to have the very latest version of a program, compiling is necessary.  
+
+1. `make` - utility to maintain programs.  
+
 
 
 
