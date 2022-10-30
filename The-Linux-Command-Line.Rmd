@@ -1584,6 +1584,84 @@ Why compile software?
 
 
 
+# Top-Down Design
+
+**Two ways to write shell function**  
+
+```
+# type 1
+function name {
+    commands
+    return
+}
+
+
+# type 2
+name () {
+    commands
+    return
+}
+
+# where name is the name of function, commands is a series of commands contained within the function.
+```
+
+Note that in order for function calls to be recognized as shell functions and not interpreted as the names of external programs, shell functions must appear in the script before they are called.
+
+
+Shell function must contain at least one command. The `return` command (which is optional) satisfies the requirement.  
+
+
+### local and global variables
+global variables maintain their existence throughout the program.   
+
+local variables are only accessible within the shell function in which they are defined and cease to exist once the shell function terminates.
+
+
+# Flow Control
+
+```
+# syntax
+
+if commands; then
+    commands
+elif commands; then
+    commands...
+else
+    commands
+fi
+```
+
+### Exit Status
+Commands (including the scripts and shell functions we write) issue a value to the system when they terminate, called an *exit status*. This value, which is an integer in the range of 0-255, indicates the success or failure of the command's execution. By convention, a value of zero indicates success and nay  othe value indicates failure. 
+
+If a list of commands follows `if`, the last command in the list is evaluated.  
+
+```{bash}
+if true; false; then echo "It's true."; fi
+
+if false; true; then echo "It's true."; fi
+```
+
+
+### A more modern version of test
+```
+# syntax
+
+[[ expression ]]
+
+```
+
+where *expression* is an expression that evaluates to either a true or false result.  
+
+The [[ ]] command is very similar to *test*, but adds an important new string expression.  
+
+```
+string1 = ~regex
+```
+which returns true if string1 matched by the extended regular expression *regex*.  
+
+Another added feature of [[ ]] is that the == operator supports pattern matching the same way pathname expansion does.
+
 
 
 
