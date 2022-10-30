@@ -1577,11 +1577,39 @@ Why compile software?
 
 - **Availability**. Despite the number of precompiled programs in distribution repositories, some ditributions may not include all the desired applications. In this case, the only way to get the desired program is to compile it from source.  
 
-- **Tomelines** While some distributions specialize in cutting edge versions of program, many do not. This means that in order to have the very latest version of a program, compiling is necessary.  
+- **Timelines** While some distributions specialize in cutting edge versions of program, many do not. This means that in order to have the very latest version of a program, compiling is necessary.  
 
 1. `make` - utility to maintain programs.  
 
+Compiling is the process of translating source code (human-readable description of a program writtern by a programmer) into the native language of the computer's processor.
 
+
+```
+./configure
+make
+make install
+```
+
+can be used to build many source code packages.  
+
+
+
+# Writing your first script
+
+I fwe write a script that everyone on a system is allowed to use, the traditional location is `/usr/local/sbin`.  
+
+scripts intended for use by the system administrator are often located in `/usr/local/sbin`.  
+
+In most cases, locally supplied software, whether scripts or compiled programs, should be placed in the `/usr/local` hierarchy and not in `/bin` or `/usr/bin`.   
+
+
+# Starting a project
+**variable names**  
+1. variable names may consist of alphanumeric characters (letters and numbers) and underscore characters.  
+2. The first character of a variable name must be either a letter or an under score.  
+3. spaces and punctuation symbols are not allowed.  
+
+Note that in an assignment, there must be no spaces between the variable name, the equals sign, and the value.  
 
 
 
