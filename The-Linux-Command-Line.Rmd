@@ -1423,7 +1423,7 @@ echo 'aaabbbccc' | tr -s ab
 ```
 
 
-`tr` accepts two arguments: a set of characters to convert from and a corresponding set of charcatersto convert to.  
+`tr` accepts two arguments: a set of characters to convert from and a corresponding set of characters to convert to.  
 
 Character sets may be expressed in one of the three ways:
 
