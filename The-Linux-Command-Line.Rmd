@@ -1818,6 +1818,24 @@ until commands; do commands; done
 [[ -d $dir_name ]] && cd $dir_name && rm *
 ```
 
+# Flow-Control: Branching With case
+The `bash` multiple-choice compound commands is called `case`.  
+
+```
+case word in
+    [pattern [| pattern ...]
+```
+
+**case Pattern Examples**  
+
+|**Pattern**|**Description**|
+|:--|:--|
+|`a)`| matches if word equals 'a'|
+|`[[:alpha:]])`| matches if word is a single alphabetic character|
+|`???)`|matches if word is exactly three characters long|
+|`*.txt`|matches if word ends with the characters '.txt'|
+|`*)`| matches any value of word. It is good practice to include this as the last pattern in `case` command, to catch any values of word that did not match a previous pattern, this is, to catch any possible invalid values.|
+
 
 
 
