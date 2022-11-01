@@ -1812,11 +1812,11 @@ until commands; do commands; done
 
 ```
 
-### reading files with loop
-
-
-
 # Troubleshooting
+```
+# only direcotry exit will changed into that directory then rm all the stuff.
+[[ -d $dir_name ]] && cd $dir_name && rm *
+```
 
 
 
