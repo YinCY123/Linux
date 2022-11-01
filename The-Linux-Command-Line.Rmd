@@ -1691,6 +1691,139 @@ which returns true if string1 matched by the extended regular expression *regex*
 Another added feature of [[ ]] is that the == operator supports pattern matching the same way pathname expansion does.
 
 
+`(())` compound command is desinged for arithmetic test.  
+
+An arithmetic test results in true if the result of the arithmetic evaluation is none-zero. 
+
+```{bash}
+if ((1)); then echo "It is true."; fi
+
+if ((0)); then echo "It is false."; fi
+```
+
+### Combining Expressions
+There are three logical operations for *test* and *[[ ]]*. 
+
+- `AND`  
+- `OR`  
+- `NOT`  
+
+**Logical Operators**  
+|**Operation**|**test**|**[[ ]] and (( ))**|
+|:--|:--|:--|
+|`AND`|`-a`|`&&`|
+|`OR`|`-o`|`||`|
+|`NOT`|`!`|`!`|
+
+
+All expressions and operators used by `test` are treated as command arguments by the shell (unlike [[ ]] and (( ))), characters which have special meaning to `bash`, such as <, >, (, and, ). must be quoted or escaped.
+
+
+### Control Operators: Another Way to Branch
+
+`bash` provides two operators that perform branching. The `&& (AND)` and || (OR) operators work like the logical operators in the `[[ ]]` compound command.  
+
+```
+# syntax
+
+command1 && command2
+
+command1 || command2
+```
+
+With the `&&` operator, `command1` is executed and `command2` is executed if, and only if, command1 is successful. 
+
+With the `||` operator, `command1` is executed and `command2` is executed if, and only if, `command1` is unsuccessful.
+
+```{bash}
+mkdir temp && cd temp
+
+# create a directory named temp, and if it succeeds, the current working directory will be changed to temp.
+```
+
+```{bash}
+[ -d temp ] || mkdir temp
+
+# test for the existence of the directory temp, and only if the test fails, will the directory be created. 
+```
+
+
+```{bash}
+[ -d temp ] || exit 1
+echo $?
+```
+
+
+# Reading Keyboard Input
+`read` - Read Values From Standard Input.  
+
+```{bash}
+# syntax
+
+read [-options] [variable...]
+```
+
+Basically, `read` assigns fields from standard input to the specified variables.  
+
+We use `echo` with the `-n` option (which suppresses the trailing newline on output) to display a prompt, and then use read to input a value for the variable `int`.
+
+`read` can assign input to multiple variables.  
+
+If `read` receives fewer than the expected number, the extra variables are empty, while an excessive amount of input results in the final variable containing all of the extra input.
+
+
+**read Options**  
+|**Option**|**Description**|
+|`-a array`| assign the input to array, starting with index zero.|
+|`-d delimiter`| The first character in the string delimiter is used to indicate end of input, rather than a newline character.|
+|`-e`| Use Readline to handle input. This permits input editing in the same manner as the command line.|
+|`-i string`| Use *string* as default reply if the user simply presses Enter. Requires the `-e` option.|
+|`-n num`| Read `num` characters of input, rather than an entire line.|
+|`-p prompt`| Display a prompt for input using the string prompt.|
+|`-r`| Raw mode. Do not interpret backslash characters as escapes.|
+|`-s`| Silent mode. Do not echo characters to the display as they are typed.|
+|`-t seconds`| Timeout. Terminate input after *seconds*. read returns a non-zero exit status if an input times out.|
+|`-u fd`| Use input from file descriptor *fd*, rather than standard input.|
+
+
+
+### IFS (internal field separator)
+The default value of IFS contains a space, a tab, and a newline character, each of which will separate items from one another.
+
+We can adjust the value of IFS to control the separation of fields input to `read`.
+
+
+### Validating Input
+Very often the difference between a well-written program and a poorly written one lies in the program's ability to deal with the unexpected.
+
+
+
+# Flow Control: Looping With while / until
+## while
+```
+# syntax
+while commands; do commands; done
+```
+
+## until
+```
+# syntax
+until commands; do commands; done
+
+```
+
+### reading files with loop
+
+
+
+# Troubleshooting
+
+
+
+
+
+
+
 
 
 
