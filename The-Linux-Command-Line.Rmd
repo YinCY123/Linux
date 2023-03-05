@@ -10,14 +10,48 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Navigation
-1. `pwd`: print name of current working directory.  
-2. `cd`: change directory.  
-    - `cd`: change the working directory to your home directory.  
-    - `cd -`: changes the working directory to the previous working directory.  
-    - `cd ~user_name`: change the working directory to the home directory of `user_name`.  
-3. `ls`: list directory contents.  
-4. `.`: refers to the working directory.  
-5. `..`: refers to the working directory's parent directory.  
+## pwd
+print name of current working directory.
+
+## cd
+change directory.  
+- `cd`: change the working directory to your home directory.  
+- `cd -`: changes the working directory to the previous working directory.  
+- `cd ~user_name`: change the working directory to the home directory of `user_name`.  
+- `CDPATH`: set the default `cd` parent directory. To make this change permanent, add export `CDPATH=/path` to your `~./.bash_profile`.  
+- Similar to the `PATH` variable, you can add more than one directory entry in the `CDPATH` variable, separating them with `:`.  
+- navigate up the directory using `..n`  
+
+> automatically correct mistyped directory names
+
+```
+shopt -s cdspell
+```
+
+examples
+```
+alias ..='cd ../'
+alias ..2='cd ../../'
+alias ..3='cd ../../../'
+alias ..4='cd ../../../../'
+alias ..5='cd ../../../../../'
+
+
+alias cd..='cd ../'
+alias cd..2='cd ../../'
+alias cd..3='cd ../../../'
+alias cd..4='cd ../../../../'
+alias cd..5='cd ../../../../../'
+```
+
+## ls
+list directory contents.  
+
+## .
+refers to the working directory.
+
+## ..
+refers to the working directory's parent directory.  
 
 
 **Absolute and relative pathnames**  
@@ -27,10 +61,13 @@ A relative pathname starts from the working directory to the destination.
 
 
 # Exploring the system
-1. `file`: determine file type.  
-2. `less`: view file contents.  
-    - `ls ~ /usr`
-    - `ls -l`
+## file
+determine file type.  
+
+## less
+view file contents.  
+- `ls ~ /usr`
+- `ls -l`
     
 
 **Options and arguments**  
@@ -39,24 +76,37 @@ command -options arguments
 ```
 
 # Manipulating Files and Directories
-1. `cp`: copy files and directories  
-    - `cp item1 item2`: copy single file or directory 'item1' to file or directory 'item2'  
-    - `cp item ... directory`: copy multiple items into a directory  
-    - `cp file1 file2`: copy file1 to file2, if file2 exists, it is overwritten with the contents of file1. If file2 does not exist, it is created.  
-    - `cp -i file1 file2`: same as above, except that if file2 exists, the user is prompted before it is overwritten.  
-    - `cp file1 file22 dir1`: copy file1 and file2 into directory dir1. dir1 must already exist.  
-    - `cp dir1/* dir2`: Using a wildcard, all the files in dir1 are copied into dir2, dir2 must already exist.  
-    - `cp -r file1 file2`: copy the contents of directory dir1 to directory dir2. If directory dir2 does not exist, it is created and, after the copy, will contain the same contents as directory dir1.  
+## cp
+copy files and directories  
+- `cp item1 item2`: copy single file or directory 'item1' to file or directory 'item2'  
+- `cp item ... directory`: copy multiple items into a directory  
+- `cp file1 file2`: copy file1 to file2, if file2 exists, it is overwritten with the contents of file1. If file2 does not exist, it is created.  
+- `cp -i file1 file2`: same as above, except that if file2 exists, the user is prompted before it is overwritten.  
+- `cp file1 file22 dir1`: copy file1 and file2 into directory dir1. dir1 must already exist.  
+- `cp dir1/* dir2`: Using a wildcard, all the files in dir1 are copied into dir2, dir2 must already exist.  
+- `cp -r file1 file2`: copy the contents of directory dir1 to directory dir2. If directory dir2 does not exist, it is created and, after the copy, will contain the same contents as directory dir1.  
 
-2. `mv`: move/rename files and directories  
-    - `mv item1 item2`: move or rename file or directory item1 to item2.  
-    - `mv item ... directory`: move one or more items from one directory to another.  
-3. `mkdir`: create directories  
-4. `rm`: remove files and directories  
-5. `ln`: create hard and symbolic links   
-    - `ln file link`: create a hard link
-    - `ln -s item link`: create a symbolic link, where 'item' is either a file or a directory.  
+## mv
+move/rename files and directories  
+- `mv item1 item2`: move or rename file or directory item1 to item2.  
+- `mv item ... directory`: move one or more items from one directory to another.  
 
+## mkdir
+create directories  
+
+## rm
+remove files and directories  
+
+## ln
+create hard and symbolic links   
+- `ln file link`: create a hard link
+- `ln -s item link`: create a symbolic link, where 'item' is either a file or a directory.  
+
+## at 
+execute scripts at specified time
+
+## watch 
+execute a command continuously at a certain interval
 
 
 **Hard and Symbolic Links**  
@@ -82,7 +132,6 @@ command -options arguments
 |`[[:class:]]`|matches any character that is a member of the specified class|
 
 
-----
 
 
 **Commonly Used Character Classes**   
@@ -99,15 +148,33 @@ Wildcards can be used with any command that accepts filenames as arguments.
 
 
 # Working with Commands
-1. `type`: indicate how a command name is interpreted.  
-2. `which`: display which executable program will be executed, the location of the program.  
-    - `which` only works for executable programs, not builtins nor aliases that are substitutes for actual executable programs.  
-3. `help`: get help for shell builtins.  
-4. `man`: display a command's manual page.  
-5. `apropos`: display a list of appropriate commands.  
-6. `info`: display a command's info entry.  
-7. `whatis`: display a very brief description of command.  
-8. `alias`: create an alias for a command.  
+## type
+indicate how a command name is interpreted.  
+
+## which 
+display which executable program will be executed, the location of the program.  
+- `which` only works for executable programs, not builtins nor aliases that are substitutes for actual executable programs.  
+
+## help
+get help for shell builtins.  
+
+# man
+display a command's manual page.  
+
+## apropos
+display a list of appropriate commands.  
+
+## info
+display a command's info entry.  
+
+## whtis
+display a very brief description of command.  
+
+## alias
+create an alias for a command.  
+
+## tldr
+examples with command.  
 
 
 **What exactly are commands?**  
@@ -119,17 +186,6 @@ Wildcards can be used with any command that accepts filenames as arguments.
 
 - **An alias**. Commands that we can define ourselves, built from other commands.  
 
-
-**Getting A command's documentation**  
-- `help`: get help for shell builtins.  
-- `--help`: display usage information for executable programs.  
-- `man`: display executable program's manual page.  
-    - `man section_number command`: man 8 cp  
-- `apropos`: display appropriate commands  
-    - search the list of man pages for possible matches based on a search term.  
-- `whatis`: display a very brief description of a command.  
-- `info`: display a program's info entry.  
-    - The info program reads info files, which are tree structured into individuals nodes, each containing a single topic. Info files contain hyperlinks that can be move you from one node to node.  
 
 - `alias`: create command from commands
     - `alias new_command='string'`  
@@ -159,6 +215,38 @@ cd /usr; ls -lh; cd -
 |`8`|System administration commands|
 
 
+# process
+## htop
+
+## ps
+
+**nice and priority**  
+
+the value of nice is between -20 and 19, the higher the value the nicer of this process thus occupy little CPU time.  
+
+```
+# run vim at nice of 10
+nice -n 10 vim
+
+# chnage PID 12345 process's nice value to 10
+renice -n 10 -p 12345 
+```
+
+at most times PRI = 20 + NI at `htop` 
+
+but at some times we can see some process has erent PRI value, such as RT, or negative value. this demonstrate that these processes often have higher priority.  
+
+# Suppress Standard Ouput and Error Message
+## Suppress standard output using > /dev/null
+```
+cat file.txt > /dev/null
+```
+
+## Suppress standard error using 2> /dev/null
+```
+cat invalid-file-name.txt 2> /dev/null
+```
+
 
 # redirection  
 - `cat`: display file content or concatenate files.  
@@ -180,7 +268,7 @@ cd /usr; ls -lh; cd -
 
 
 Redirecting standard output and standard error to one file.  
-The direction of standard error must always occur after redirecting standard output or it doesn't work.  
+**The direction of standard error must always occur after redirecting standard output or it doesn't work**.  
 ```
 ls -l /bin/usr > ls-output.txt 2>&1
 
@@ -787,8 +875,8 @@ netstat -ie
 9. URI (Uniform Resource Identifier).  
 
 
-
 # Searching files
+## locate
 1. `locate`: find files by name.  
 The `locate` program performs a rapid database search of *pathnames*, and then outputs every name that matches a given substring.  
 ```{bash}
@@ -798,7 +886,12 @@ locate bin/zip
 updatedb
 ```
 
-2. `find`: search a given directory (and its subdirectories) for files based on a variety of attributes.   
+## find
+`find`: search a given directory (and its subdirectories) for files based on a variety of attributes.   
+
+```
+find [pathnames] [conditions]
+```
 
 The beauty of `find` is that is can be used to identify files that meet specific criteria. It does this through the application of *options*, *test*, and *actions*.
 
@@ -846,9 +939,13 @@ find ~ -type file -name '*.png' -size +1K | wc -l
 |`-inum n`|Match files with inode number n. This is helpful for finding all the hard links to a particular inode.|
 |`-samefile name`|Similar to the -inum test. Matches files that share the same inode number as file name.|
 
-> a: file accessed
-c: change of file's status
-m: file's data modified
+
+`atime`: file accessed  
+`btime`: file birth time  
+`ctime`: change of file's status  
+`mtime`: file's data modified  
+
+
 
 **operators**  
 provide logical relationships between the test.  
@@ -908,16 +1005,19 @@ where command is the name of a command, {} is a symbolic representation of the c
 
 ```{bash, eval = F}
 find . -type f -name 'so*' -exec ls -lh '{}' ';'
+find . -type f -name 'so*' -exec ls -lh '{}' \;
 ```
 
 *By changing the trailing semicolon character to a plus sign, we activate the ability of `find` to combine the results of the search into an argument list for a single execution of the desired command*. By change ';' to + the system has to execute the ls -l command for only once.
 
 ```{bash, eval = F}
 find . -type f -name 'foo*' -exec ls -lh '{}' +
+# this will be much fast than ; end
 ```
 
 
-3. `xargs`: The `xargs` command performs an interesting function. It accepts input from standard input and converts it into an argument list for a specified command.  
+## xargs
+The `xargs` command performs an interesting function. It accepts input from standard input and converts it into an argument list for a specified command.  
 ```{bash, eval=F}
 find . -type f -name 'foo*' -print | xargs ls -lh
 
@@ -927,9 +1027,8 @@ find . iname '*.png' -print0 | xargs --null ls -l
 
 While the number of arguments that can be placed into a command line is quite large, it’s not unlimited. It is possible to create commands that are too long for the shell to accept. When a command line exceeds the maximum length supported by the system, `xargs` executes the specified command with the maximum number of arguments possible and then repeats this process until standard input is exhausted.
 
-
-4. `touch`: change file times.  
-5. `stat`: display file or file system status.  
+## `touch`: change file times.  
+## `stat`: display file or file system status.  
 
 
 **options**  
@@ -1127,7 +1226,7 @@ Unless we include the -r option for recursion, only the playground directory (bu
 If an existing archive is specified, it is updated rather than replaced. This means that the existing archive is preserved, but new files are added and matching files are replaced.  
 
 # rsync
-This program can syn- chronize both local and remote directories by using the rsync remote-update protocol, which allows rsync to quickly detect the differences between two directories and per- form the minimum amount of copying required to bring them into sync. This makes rsync very fast and economical to use, compared to other kinds of copy programs.  
+This program can syn- chronize both local and remote directories by using the `rsync` remote-update protocol, which allows `rsync` to quickly detect the differences between two directories and perform the minimum amount of copying required to bring them into sync. This makes `rsync` very fast and economical to use, compared to other kinds of copy programs.  
 
 ## usage
 ```
@@ -1154,7 +1253,8 @@ the --delete option to remove files that may have existed on the backup device t
 ```
 sudo rsync -av --delete --rsh=ssh /etc /home /usr/local remote-sys:/backup
 ```
-First, we added the --rsh=ssh option, which instructs rsync to use the ssh program as its remote shell. In this way, we were able to use an ssh encrypted tunnel to securely transfer the data from the local system to the remote host. Second, we specified the remote host by prefixing its name (in this case the remote host is named remote-sys) to the destination pathname.  
+
+First, we added the --rsh=ssh option, which instructs `rsync` to use the ssh program as its remote shell. In this way, we were able to use an ssh encrypted tunnel to securely transfer the data from the local system to the remote host. Second, we specified the remote host by prefixing its name (in this case the remote host is named remote-sys) to the destination pathname.  
 
 
 # regular expressions
@@ -1162,8 +1262,10 @@ Regular expression are symbolic notations used to identify patterns in text.
 grep searches text files for the occurrence of a specified regular expression and outputs any line containing a match to standard output.  
 
 ## grep
+`grep` command is used to search files for a specific text. 
+
 ```
-grep [options] regex [file...]
+grep [options] pattern(regex) [file...]
 ```
 
 **grep Options**
@@ -1173,16 +1275,18 @@ grep [options] regex [file...]
 |`-i`|ignore case|
 |`-v`|invert match|
 |`-c`|print the number of matches instead of the lines themselves. may also be specified --count|
-|`-l`|print the name of each file that contains a match instead of the line themselves. may also be specified --files-without-match|
+|`-l`|print the name of each file that contains a match instead of the line themselves. may also be specified --files-with-match|
 |`-L`|like the -l option, but print only the names of files that do not contain matches. may also be specified --files-without-match|
 |`-n`|prefix each matching line with the number of the line within the file. may also be specified --line-number|
 |`-h`|for multi-file searches, suppress the output of filenames. may also be specified --no-filename|
+|`-r`|search all subdirectories for a text matching a specific pattern|
+|`-w`|only match the whole word|
 
 
 ## metacharacters
 - `^`: begining anchor  
 - `$`: end anchor  
-- `.`: any character  
+- `.`: any single character except the end of the line  
 - `[`  
 - `]`  
 - `{}`: match an element a specific number of times  
@@ -1195,7 +1299,7 @@ grep [options] regex [file...]
 - `|`  
 - `\`  
 
-### The difference between basic regular expression and Extended regular expression
+**The difference between basic regular expression and Extended regular expression**
 
 It's only about metacharacters. 
 
@@ -1208,7 +1312,6 @@ The basic regular expression have the following metacharacters
 - `*`  
 
 all other charcaters are considered literals. 
-
 
 
 The extended regular expression has the follwoing metacharacters
@@ -1269,7 +1372,8 @@ grep -hE '(bz|gz|zip)' dirlist-*.txt
 
 
 # Text Processing
-1. `cat`: concatenate files and print on the standard ouput.  
+## cat
+concatenate files and print on the standard ouput.  
 ```{bash}
 # show the non-printing characters in the text
 cat -A foo.txt
@@ -1278,7 +1382,8 @@ cat -A foo.txt
 cat -ns foo.txt
 ```
 
-2. `sort`: Sort lines of text files.  
+## sort
+Sort lines of text files.  
 ```{bash}
 # merge multiple files
 sort dirlist-* > merged-sorted-files.txt
@@ -1297,7 +1402,8 @@ sort -k 1,1 -k 3.4bn -k 3.5bn os
 sort -t ":" -k 7 /etc/passwd
 ```
 
-3. `uniq`: report or omit repeated lines.  
+## uniq
+report or omit repeated lines.  
 `uniq` performs a seemingly trivial task. When given a sorted file, it removes any duplicate lines and send the results to standard output. It is often used in conjunction with sort to  clean the output of duplicates.  
 ```{bash}
 sort foo.txt | uniq
@@ -1307,8 +1413,7 @@ sort foo.txt | uniq -c
 ```
 
 
-### Slicing And Dicing
-4. `cut`  
+## cut  
 The `cut` program is used to extract a section of text from a line and output extracted section to standard output. It can accept multiple file arguments or input from standard input.  
 
 **cut Selction options**  
@@ -1335,15 +1440,16 @@ expand os | cut -c 23- -
 expand os | unexpand
 ```
 
-5. `paste`: merge lines of files.  
+## paste
+merge lines of files.  
 The `paste` command does the opposite of `cut`. Rather than extracting a column of text from a file, it adds one or more columns of text to a file.  
 
 ```{bash, eval=F}
 paste os-date os-version
 ```
 
-
-6. `join`: join lines of two files on a common field.  
+## join
+join lines of two files on a common field.  
 In some ways, `join` is like `paste` in that it adds columns to a file, but it uses a unique way to do it. A join is an operation usually associated with `relational database` where data from multiple tables with a shared key fields is combined to form a desired result.
 
 The join program performs the same operation. It joins data from multiple files based on a shared key field.  
@@ -1353,8 +1459,8 @@ The join program performs the same operation. It joins data from multiple files 
 join os-key-name os-key-version
 ```
 
-### Comparing text
-7. `comm`: compares two files and displays the lines that are unique to each one and the lines they have in common.  
+## comm
+compares two files and displays the lines that are unique to each one and the lines they have in common.  
 
 ```{bash}
 comm file1 file2
@@ -1363,8 +1469,8 @@ comm file1 file2
 comm -12 file1 file2
 ```
 
-
-8. `diff`: used to detect the differences between files. However, `diff` is a much more complex tool, supporting many output formats and the ability to process large collections of text files at once.
+## diff
+used to detect the differences between files. However, `diff` is a much more complex tool, supporting many output formats and the ability to process large collections of text files at once.
 
 **diff change commands**  
 
@@ -1387,7 +1493,7 @@ diff -u file1 file2
 ```
 
 
-
+## patch
 9. `patch`  
 The `patch` program is used to apply changes to text file. It accepts output from `diff` and is generally used to convert older version of files into newer version.
 
@@ -1403,8 +1509,7 @@ patch < diff_file
 ```
 
 
-### editing on the fly
-10. `tr`  
+## tr
 translate or delete characters.  
 ```{bash, eval=F}
 # syntax
@@ -1433,7 +1538,7 @@ Character sets may be expressed in one of the three ways:
 
 In most case, both character sets should be equal length; however, it is possible for the first set to be larger than the second, particularly if we wish to convert multiple characters to a single character.
 
-11. `sed`  
+## sed
 The name `sed` is short for *stream editor*. It performs text editing on a stream of text, either a set of specified files or standard input.  
 
 `sed` is a powerful and somewhat complex program (there are entire books about it).  
@@ -1485,8 +1590,7 @@ sed -i 's/Ubuntu/ubuntu/' os
 |`addr!`| match all lines except addr, which may be any of the froms.|
 
 
-
-12. `aspell`  
+## aspell 
 spelling checker.  
 
 ```{bash}
@@ -1497,7 +1601,8 @@ aspell check -H html_file
 
 
 # Formatting Output
-1. `nl`: number lines.  
+## nl
+number lines.  
 ```{bash}
 nl os
 
@@ -1509,7 +1614,8 @@ cat -n
 ls -l | nl
 ```
 
-2. `fold`: Wrap each line to a specified length.  
+## fold
+Wrap each line to a specified length.  
 ```{bash}
 # the default width is 80
 echo "The brown fox jumped over the lazy dog." | fold -w 12
@@ -1519,15 +1625,12 @@ echo "The brown fox jumped over the lazy dog." | fold -w 12 -s
 ```
 
 
-3. `fmt`  
+## fmt
 `fmt` accepts either files or standard input and performs paragraph formatting on the text stream. Basically, it fills and joins lines in text while preserving blank lines and indentation.  
 
-```{bash}
-
-```
 
 
-4. `pr`  
+## pr
 The `pr` program is used to paginate text.  
 ```{bash}
 # page length 15 lines, page width 65 columns
@@ -1535,7 +1638,8 @@ pr -l 15 -w 65 os
 ```
 
 
-5. `printf`: format and print data.  
+## printf
+format and print data.  
 ```{bash}
 # syntax
 printf 'foramt' arguments
@@ -1558,12 +1662,11 @@ printf "%+d, %.3f, %o\n" 380 380 380
 |`%`| Print a literal % symbol.|
 
 
-###Document Formatting Systems
+## groff
+a document formatting system.  
 
-6. `groff`: a document formatting system.  
 
-
-# Printing  
+## Printing  
 1. `pr`  
 2. `lpr`  
 3. `a2ps`  
