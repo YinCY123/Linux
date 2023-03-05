@@ -1,0 +1,57 @@
+---
+title: "change swap size"
+author: "YinCY"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# How to Increase Swap Size on Ubuntu Linux
+The recent release of Ubuntu use swap file instead of the traditional swap partition. The swap file is simply a file under the root which is used as swap to share the burden on the RAM.
+
+The bigest advantage of using a swap file is that you can easily resize it. That's not always the case when you use a dedicated swap partition. 
+
+## Increase swap size on ubuntu
+```
+# to see if you have a swap file 
+swapon --show
+
+
+# to resize it you have to turn the swap off
+sudo swapoff /swapfile
+
+
+# use the fallocate to change the size of the swap file
+sudo fallocate -l 50G /swapfile
+
+# enable the swap file
+sudo swapon /swapfile
+
+# check the effects
+free -m
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
