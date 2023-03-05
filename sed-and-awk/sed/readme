@@ -1,0 +1,38 @@
+Sed Command Syntax
+sed [options] {sed-commands} {input-file}
+
+Sed Substitute Command Syntax
+sed '[address-range|pattern-range] s/original-string/replacement-string/[substitute-flags]' input-file
+
+substitude-flags:
+1. g flag: global flag
+2. number flag: specify a specific occurrence of the original-string, only the n-th instance of original-strin will trigger the substitution.
+3. p flag: print flag
+4. w flag: write flag
+5. i flag: ignore case flag
+6. e flag: Using the e flag, you can execute whatever is available in the pattn space as a shell command, and the output will be returned to the pattern space
+
+Sed Scripting flow
+1. Read a line into the pattern space.
+
+2. Execute the sed command on the line in the sed pattern space. If there are more than one sed commands available, either via a sed script, -e options, or {}, it executes all the sed commands one by one in sequence on the line that is currently in the pattern space.
+
+3. Print the line from the pattern space. After printing this line, the sed pattern space will be empty.
+
+4. Repeat this again until the end of the input file is reached.
+
+- Patern space: which is used as part of the typical sed execution flow. Pattern space is the internal sed buffer where sed palces, and modifies, the line it reads from the input file.
+
+- Hold space: This is an additional buffer available where sed can hold temporary data. Sed allows you to move data back and forth between pattern space and hold space, but you cannot execute the typical sed commands on the hold space. Pattern space gets deleted at the end of every cycle in a typical sed execution flow. However, the content of the hold space will retained from one cycle to the next, it is not deleted between cycles.
+
+1. x command: swaps pattern space with hold space.
+2. h command: copies pattern space to hold space.
+3. H command: append pattern space to hold space.
+4. g command: copies the content of hold space to pattern space.
+5. G command: appends the content of hold space to pattern space with a new line.
+6. n command: prints the current pattern space and fetches the next line from the input-file.
+7. N command: appends the next line from input-file to the pattern buffer.8. = command: prints numbers followed by the line content from the input-file.
+9. q command: causes sed to quit executing.
+10. r command: read the content of another file and print it at a specified location while processing the input-file.
+11. a command: insert a new line after a specific location.
+12. t command: branches the execution flow to the label only if the previous substitute command was successful.
