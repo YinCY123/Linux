@@ -66,14 +66,40 @@ determine file type.
 
 ## less
 view file contents.  
-- `ls ~ /usr`
-- `ls -l`
-    
 
-**Options and arguments**  
+**search**  
+- `/` search for a pattern   
+- `n` for next match in forward  
+- `N` for previous match in backward
+- `CTRL + F`: forward one window  
+- `CTRL + B`: backward one window
+- `G`: go to the end of the file
+- `g`: go to the start of file
+- `q or ZZ`: exit the less pager  
+
+**marked navigation**  
+- `ma`: mark the current position with the letter 'a'.  
+- `'a`: go to the marked position 'a'.  
+- `mb, mc`: mark a position with 'b' or 'c'.  
+
+**multiple file paging**  
+open multiple files by passing file names as arguments  
+
 ```
-command -options arguments
+less file1 file2
 ```
+
+- `:n`: go to the next file  
+- `:p`: go to the previous file  
+
+
+
+
+
+
+
+
+
 
 # Manipulating Files and Directories
 ## cp
@@ -158,7 +184,7 @@ display which executable program will be executed, the location of the program.
 ## help
 get help for shell builtins.  
 
-# man
+## man
 display a command's manual page.  
 
 ## apropos
@@ -401,34 +427,130 @@ ls -l "two words.txt"
 
 
 # Advanced Keyboard Tricks
-1. `clear`: clear the screen  
-2. `history`: display the contents of the history list  
+## clear
+clear the screen  
 
+## history
+display the contents of the history list  
 
-## history  
-1. `clear`: clear the screen  
-2. `history`  
-3. `!!`: re-execute the previous command  
-4. `!77`: re-execute the history command 77  
-5. `!string`: repeat last history list item starting with string.  
-6. `!?string`: repeat last history list item containing string.  
-7. `Ctrl-r`: search history incrementally, press again to find the next matched command.  
-8. `Ctrl-j`: copy the line from the searched history to the current command line.  
-9. `Ctrl-c`: or `Ctrl-g` quit the history search.  
+```
+# search the history, press again to find the next matched command
+CTRL + R
+
+# re-execute the previous command  
+- !!
+- !-1
+- CTRL + P
+- up arrow
+
+# re-execute the history command 77  
+!77
+
+# repeat last history list item starting with string.
+!string
+
+# repeat last history list item containing string. 
+!?string
+
+# clear all the previous histiry
+history -c
+
+# quite history search 
+CTRL + c
+CTRL + g
+
+# substitute a specific argument for a specific command
+cp ~/longname.txt /really/a/very/long/path/long-filename.txt
+ls -l !cp:2
+# take the previous command's second argument to current command
+
+# change the number of lines in the history
+vim ~/.bashrc
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# change the history file name
+vim ~/.bashrc
+HISTFILE=~/.commandline_history
+
+# ignore specific commands from the history
+vim ~/.bashrc
+HISTIGNORE="pwd:ls:ls -lh:tldr:"
+
+# gets the nth argument from the command that starts with string from the history
+!string:n
+
+# copy the line from the searched history to the current command line
+CTRL-j
+```
 
 
 # permissions  
-1. `id`: display user identity.  
-2. `umask`: set the default file permissions when it is created.  
-3. `su`: run a shell as another user.  
-4. `sudo`: execute a command as another user.  
-5. `chown`: change a file's owner.  
+## id
+display user identity.  
+
+## umask
+set the default file permissions when it is created.  
+
+## su
+run a shell as another user.  
+
+## sudo
+execute a command as another user.  
+
+## chown
+change a file's owner.  
     - `chown [owner][:[group]] file`.  
-6. `chgrp`: change group ownership. (much work can be done by chown)  
-7. `chmod`: change file mode. only the file's owner or the superuser can change the mode of a file or directory.  
-8. `adduser`( recommanded)  
-9. `useradd`  
-10. `groupadd`  
+
+## chgrp
+change group ownership. (much work can be done by chown)  
+
+
+## chmod
+change file mode. only the file's owner or the superuser can change the mode of a file or directory.  
+
+roles representation  
+- `u` is for user  
+- `g` is for group  
+- `o` is for others
+
+
+permission representation 
+- `r` is for read permission
+- `w` is for write permission
+- `x` is for execute permission
+
+
+```
+# add permission to a file
+chmod u+x file
+chmod g+xw file
+
+# remove permission from a file
+chmod u-x file
+chmod g-xw file
+
+
+# make permission for a file same as another file
+# set file2's permission same as file1
+chmod --reference=file1 file2
+
+
+# apply the permission to all the files under a directory
+chmod -R 755 directory-name/
+
+
+# chnage execute permission only on the directories (files are not affected)
+chmod u+x *
+```
+
+
+## adduser
+recommended  
+
+## useradd
+
+## groupadd
 
 
 **File Types**  
@@ -824,7 +946,8 @@ dpkg --search file_name
 ```
 
 # Storage Media
-1. `mount`: mount a file system.  
+## mount
+mount a file system.  
 ```{bash}
 # mount without argument will display a list of the file systems currently mounted
 mount
@@ -833,15 +956,21 @@ mount
 mount -t vfat /dev/sdb1 /mnt/usb
 ```
 
-2. `umount`: umount a file system.  
-3. `fsck`: check and repair a file system.  
-4. `fdisk`: partition table manipulator.  
+
+## umount
+umount a file system.  
+
+## fsck
+check and repair a file system.  
+
+## fdisk
+partition table manipulator.  
 ```{bash}
 sudo umount /dev/sdb1
 sudo fdisk /dev/sdb
 ```
 
-5. `mkfs`: crete a file system.  
+5. `mkfs`: create a file system.  
 6. `fdformat`: format a floppy disk.  
 7. `dd`: write block oriented data directly to a device.  
 8. `genisoimage (mkisofs)`: create an ISO 9660 image file.  
@@ -1028,8 +1157,8 @@ find . iname '*.png' -print0 | xargs --null ls -l
 While the number of arguments that can be placed into a command line is quite large, it’s not unlimited. It is possible to create commands that are too long for the shell to accept. When a command line exceeds the maximum length supported by the system, `xargs` executes the specified command with the maximum number of arguments possible and then repeats this process until standard input is exhausted.
 
 ## `touch`: change file times.  
-## `stat`: display file or file system status.  
 
+## `stat`: display file or file system status.  
 
 **options**  
 The options are used to control the scope of a `find` search.  
@@ -1045,8 +1174,99 @@ find . -type f -maxdepth 3 -name 'foo*' -exec ls -l "{}" ";"
 |`-mount`|direct find not to traverse directories that are mounted on other file systems.|
 |`-noleaf`|direct find not to optimize its search based on the assumption that it is searching a Unix-like file system. This is needed when scanning DOS/Windows file systems and CD-ROMs.|
 
+
+# wget 
+`wget` utility is the best option to download files from internet. `wget` can pretty much handle all complex download situations including large file downloads, recursive downloads, non-interactive downloads, multiple file downloads etc.,.
+
+```
+# download single file
+wget url
+
+# rename downloaded file
+wget -O targetfile url
+
+# log messages to a log file instead of stderr
+wget -o download.log url
+
+# specify download speed
+wget --limit-rate=200k url
+
+# continue the incomplete download 
+wget -c url
+
+# download in the background
+wget -b url
+
+# you can check the status of the download if it was downloaded in background
+tail -f wget-log
+
+# test download url
+# when you are going to do scheduled download, you should check whether download will happen file or not at scheduled time.
+wget -spider url
+
+#  increase total number of retry
+wget -tries=10 url
+
+# download multiple files/urls
+wget -i url-file
+
+# download a full website 
+# this is the command line which you want to execute when you want to 
+# download a full website and made available for local viewing.
+wget --mirror -p --convert-links -P ./local-dir url
+
+- `--mirror`: turn on options suitable for mirroring
+- `-p`: download all files tha are necessary to porperly display a given HTML page.
+- `--convert-links`: after download, convert the links in document for local viewing
+- `-P ./local-dir`: save all the files and directories to the specified directory
+
+
+# reject certain file types while downloading
+# don't download gif file
+wget --reject=gif url
+
+# download certain file types
+# download all pdf files
+wget -r -A .pdf url
+
+
+# quit downloading when it exceeds certain size
+# stop download when it crosses 5MB
+wget -Q5m -i url-file
+
+# ftp download
+wget ftp-url
+
+# ftp dowanload with username and password
+wget -ftp-user=username --ftp-password=password ftp-url
+```
+
+
+# SHH
+```
+# disable root login
+PermitRootLogin no
+
+# allow only specific users or groups 
+AllowUsers yincy wuyu
+AllGroups yincy wuyu
+
+# deny specific users or groups
+DenyUsers someones
+DeneyGroups somegroups
+
+# Change port number
+Port 222
+
+# disconnect SHH when no activity in 10 min
+ClientAliveInterval 600 
+ClientAliveCountMax 0
+```
+
+
+
 # Archiving and backup
-1. `gzip`  
+## gzip  
 the `gzip` program is used to compress one or more files. The `gunzip` program is used to restore compressed files to their original.  
 ```{bash}
 ls -l /etc > foo.txt
@@ -1061,30 +1281,49 @@ rm foo*
 ```
 
 
-2. `bzip2`
+## bzip2
 The `bzip2` program is similar to `gzip`, but uses a different compression algorithm that achieves higher levels of compression at the cost of compression speed.  
-```{bash}
-ls -l /etc > foo.txt
+
+```
+# compressing a file
 bzip2 foo.txt
 
-# uncompression
+# string of pattern searching on bzip2 file with bzgrep
+# syntax
+bzgrep grep-options -e pattern filename
+
+bzgrep -i -e "config" file.bz2
+
+# view the bzip2 file using bzcat without decompressing it.
+bzcat file.bz2
+
+# paging bzip2 compressed file with `bzless` and `bzmore`
+bzless file.bz2
+bzmore file.bz2
+
+# uncompression a bz2 file
 bzip2 -d foo.txt.bz2
 bunzip2 foo.txt.bz2
-```
 
-All the options (except for -r) that discussed for `gzip` are also supported in `bzip2`.  
+# compare bzip2 files 
+# it internally uses cmp command to compare the content of the compressed contents.
+bzcmp file1.bz2 file2.bz2
+
+# find the difference between two bzip2 files
+bzdiff file1.bz2 file2.bz2
+```
 
 `bzip2` also comes with the `bzip2recover` program, which will try to recover damaged `.bz2` files.
 
-### Archiving Files
-A common file-management task often used in conjunction with compression is archiving. Archiving is the process of gathering up many files and bundling them together into a single large file.  
+## tar
+`tar` command (tape archive) is used to convert a group of files into an archive. 
 
-3. `tar`  
 In the Unix-like world of software, the `tar` program is the classic tool for archiving files. Its name, short for *tape archive*, reveals its roots as a tool for making backup tapes.  
 
 A tar archive can consist of a group of separate files, one or more directory hierarchies, or a mixture of both.  
 
 ```
+# syntax
 tar mode[options] pathname ...
 ```
 
@@ -1096,24 +1335,31 @@ tar mode[options] pathname ...
 |`x`| Extract an archive|
 |`r`| Append specified pathnames to the end of an archive|
 |`t`| List the contents of an archive|
+|`v`| verbose mode|
+|`f`| option f indicates the archive file name mentioned in the command|
+|`C`| extract tar.gz to specific directory|
+|`z`|compression with gzip while archive|
+|`j`|compression with bzip2 while archive|
 
 
-```{bash, eval = F}
+```
 # archive a directory
 tar cf   playground.tar playground
-#   mode option         pathname
-
-# the mode must always be specified first, before any other option
 
 # list contents of a archive
-tar tf playground.tar
+tar tvf playground.tar
 
-# extract specified file
+# extract all the files 
+tar xvf file.tar
+
+# extract specified file, pathname
 tar xf archve.tar pathname
-# by adding the tailing pathname to the command, tar will only restore the specified file.
 
 # support wildcards
 tar xf archive.tar --wildcards 'pathname'
+
+# extract tar.gz files to a specific directory
+tar xvf file.tar -C /home/yincy
 
 # conjunction with find
 find playground -name 'file-A' -exec tar rf playgroud.tar '{}' ';'
@@ -1128,21 +1374,74 @@ find playground -name 'file-A' | xargs tar cf playground.tar | gzip > playground
 
 # tar can internally using gzip or bzip2 wile archiving
 find playground -name 'file-A' | xargs tar cfz playground.tgz
+
+# combine gzip, bzip2 with tar
+tar cvfz  myfile.tar.gz /var/log/*
+tar cvfj myfile.tar.bz2 /var/log/*
+# bzip2 gives higher level of compression when compared to gzip
+```
+
+## cpio
+`cpio` stands for 'copy in, copy out'.  
+
+`cpio` command is used to process archive files, for example `*.cpio` or `*.tar`
+
+`cpio` performs the following three operations.  
+- copying files to an archive  
+- extracting files from an archive
+- passing files to another directory tree
+
+```
+# create a *.cpio archive file
+ls | cpio -ov > /tmp/object.cpio
+
+# create *.cpio archive with selected files
+find . -iname *.c -print | cpio -ov > /tmp/c_files.cpio
+
+# create *.tar file with `-F` option
+ls | cpio -ov -H tar -F sample.tar
+
+# extract *.tar archive file
+cpio -idv -F sample.tar
+
+# view conent of tar archive file
+cpio -it -F smaple.tar
 ```
 
 
-4. `zip`  
-The `zip` program is both a compression tool and an archiver.
+## zip
+The `zip` program is both a compression tool and an archive.
 
 ```
 # syntax
-zip options zipfile file...
+zip options zip_file_name file...
 ```
 
-```{bash}
+```
+# zip a directory and it's files recursively
 zip -r playground.zip playground
 
+# unzip a *.zip compressed file
 unzip playground.zip
+
+# to see a detailed output during unzip 
+unzip -v playground.zip
+
+# list the content of a zip file
+unzip -l playground.zip
+
+# compression level 0-9, default 6, 0 just archive
+zip -9 playground.zip playground
+
+# validate a zip archive
+unzip -t palyground.zip
+
+# passwaord protection of zip files
+zip -P mysecuredpwd palyground.zip playground/
+
+# interactively password, it will prompt you to enter the password
+zip -e playground.zip playground/
+
 
 find playground -name 'file-A' | zip -@ 'file-A.zip'
 # pile the find list to -@
@@ -1494,7 +1793,6 @@ diff -u file1 file2
 
 
 ## patch
-9. `patch`  
 The `patch` program is used to apply changes to text file. It accepts output from `diff` and is generally used to convert older version of files into newer version.
 
 ```{bash, eval = F}
@@ -1543,6 +1841,26 @@ The name `sed` is short for *stream editor*. It performs text editing on a strea
 
 `sed` is a powerful and somewhat complex program (there are entire books about it).  
 
+```
+# syntax
+sed 'ADDRESSs/regexp/replacement/flags' filename
+
+sed 'PATTERNSs/regexp/replacement/flags' filename
+```
+
+The 's' command attempts to match the pattern space against the supplied `regexp`, if the match is successful, then that portion of the pattern space which was matched is replaced with `replacement`.
+
+**flags**  
+
+- `g`: replace all the instance of `regexp` with `replacement`.  
+- `n`: Could be any number, replace nth instance of the `regexp` with `replacement`.  
+- `p`: if the substitution was made, then prints the new pattern space.  
+- `i`: match `regexp` in a case-insensitive manner.  
+- `w file`: If substitution was made, write out the result to the given file.  
+- We can use different delimiters (one of @ % ; :) instead of /.  
+
+
+
 ```{bash}
 # search and replace
 echo 'front' | sed 's/front/back'
@@ -1574,6 +1892,16 @@ sed 'aaabbbccc' | sed 's/b/B/g'
 sed -i 's/lazy/laxy/; s/jumped/jimped/' foo.txt
 
 sed -i 's/Ubuntu/ubuntu/' os
+
+# delete the last 3 characters from each line.
+sed 's/...$//' files.txt
+
+# delete commands
+sed 's/#.*//' files.txt
+
+# replace and delete command lines
+# there two commands separated by ;
+sed -e 's/#.*//;/^$/d' file.txt
 ```
 
 
@@ -1589,6 +1917,77 @@ sed -i 's/Ubuntu/ubuntu/' os
 |`addr1,+n`| match addr1 and the following n lines.|
 |`addr!`| match all lines except addr, which may be any of the froms.|
 
+## awk
+The `awk` is mostly used for pattern scanning and processing. It searches one or more files to see if they contain lines that matches with the specified patterns and then perform associated actions.
+
+Some of the key features of awk:  
+- awk views a text file as records and files.  
+- like common programming language, awk has variables, conditionals and loops.  
+- awk has arithmetic and string operators.  
+- awk can generate formatted reports.  
+- awk reads from a file or from its standard input, and ouputs to its standard output. awk does not get along with non-text files.
+
+```
+# syntax
+awk '/search pattern1/ {actions} 
+    /search pattern2/ {actions}' file
+```
+
+- search pattern is a regular expression.  
+- actions - statements to be performed.  
+- several patterns and actions are possible in awk.  
+- file - input file.  
+- single quotes around program is to avoid shell not to interpret any of its special characters.  
+
+
+**awk working methodology**  
+1. awk reads the input files one line at a time.  
+2. for each line, it matches with given pattern in the given order, if matches performes the corresponding action.  
+3. if no pattern matches, no action will be performed.  
+4. In the above syntax, either search pattern or action are optional, but not both.  
+5. If the search pattern is not given, then awk performs the given actions for each line of the input.  
+6. If the action is not given, print all that lines that matches with the given patterns which is the default action.  
+7. Empty braces without any action does nothing. It wont perform default printing operation.  
+8. each statement in actions should be delimited by semicolon.  
+9. awk accepts any number of patterns, but each set (patterns and its corresponding actions) has to be separated by newline.  
+10. awk has number of built in variables. For each record, it split the record delimited by whitespace character by default and stores it in the $n variables. If the line has 4 words, it will be stored in $1, $2, $3 and $4. $0 represents the whole line. NF is a built in variable which represents total number of fields in a record.  
+
+
+
+```
+# print every line
+awk '{print;}' file.txt
+
+# print the match lines
+awk '/Thomas/ 
+    /Nisha/' file.txt
+    
+# print only the specified field (columns)
+awk '{print $2,$5;}' file.txt
+
+# print the 2 last field
+awk '{print $2, $NF;}' file.txt
+
+awk '$1 > 200' file.txt
+
+# print employees in technology department
+awk '$4 ~/Technology/' employee.txt
+# the ~ operator is for comparing with the regular expressions.
+```
+
+**Initialization and final action**  
+`awk` has two important patterns which are specified by the keyword called BEGIN and END.  
+
+syntax
+```
+BEGIN {actions}
+{action} # action for every line in a file
+END {actions}
+```
+- # is for comments in `awk`
+- actions specified in the BEGIN section will be executed before starts reading the lines from the input. 
+- END actions will be performed after completing the reading and processing the lines from the input.
+
 
 ## aspell 
 spelling checker.  
@@ -1598,6 +1997,13 @@ aspell check textfile
 
 aspell check -H html_file
 ```
+
+## view multiple files in one terminal
+```
+# tail accepts multiple -f option
+tail -f /etc/password -f /etc/profile
+```
+
 
 
 # Formatting Output
