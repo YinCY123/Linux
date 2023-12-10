@@ -1,3 +1,0 @@
-filename	First Name
-lname	Last Name
-mname	Middle Name

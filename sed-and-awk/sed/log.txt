@@ -1,5 +1,0 @@
-log: Input Validated
-log:
-log: testing resumed
-log:
-log: output created
