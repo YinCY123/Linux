@@ -9,6 +9,20 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# types of commands
+- an executable program
+- a command built into the shell itself
+- a shell function
+- An alias
+
+
+# help commands
+- `whatis`: a brief description of the command.  
+- `info`  
+- `man`  
+- `which`: the location of the command
+
+
 # Navigation
 ## pwd
 print name of current working directory.
@@ -54,20 +68,20 @@ refers to the working directory.
 refers to the working directory's parent directory.  
 
 
-**Absolute and relative pathnames**  
+## Absolute and relative pathnames
 An absolute pathanme begins with the root directory and follows the tree branch by branch until the path to the desired directory or file is completed.  
 
 A relative pathname starts from the working directory to the destination.  
 
 
 # Exploring the system
-## file
+## `file`
 determine file type.  
 
-## less
+## `less`
 view file contents.  
 
-**search**  
+**less search options**  
 - `/` search for a pattern   
 - `n` for next match in forward  
 - `N` for previous match in backward
@@ -91,14 +105,6 @@ less file1 file2
 
 - `:n`: go to the next file  
 - `:p`: go to the previous file  
-
-
-
-
-
-
-
-
 
 
 # Manipulating Files and Directories
@@ -262,19 +268,9 @@ at most times PRI = 20 + NI at `htop`
 
 but at some times we can see some process has erent PRI value, such as RT, or negative value. this demonstrate that these processes often have higher priority.  
 
-# Suppress Standard Ouput and Error Message
-## Suppress standard output using > /dev/null
-```
-cat file.txt > /dev/null
-```
 
-## Suppress standard error using 2> /dev/null
-```
-cat invalid-file-name.txt 2> /dev/null
-```
+# Redirection  
 
-
-# redirection  
 - `cat`: display file content or concatenate files.  
     - `cat *.tiff > merge.tiff`.  
 - `sort`: sort lines of text.  
@@ -286,11 +282,18 @@ cat invalid-file-name.txt 2> /dev/null
 - `head`: Output the first part of a file.    
 - `tail`: Output the last part of a file.  
 - `tee`: read from standard input and write to standard output and files. Allowing the data to continue down the pipeline.   
-- `|`: piplines  
+- `|`: piplines.  
+-  `<`: standard input redirection.  
 - `>`: redirection standard output.  
 - `>>`: redirection standard output with append.  
 - `2&>`: redirection standard error.  
 
+
+```
+# direct inputfile to program, and the result of program directed to the outputfile
+
+program < inputfile > outputfile
+```
 
 
 Redirecting standard output and standard error to one file.  
@@ -303,7 +306,9 @@ ls -l /bin/usr &> ls-output.txt
 ls -l /bin/usr &>> ls-output.txt
 ```
 
-disposing of unwanted output
+**disposing of unwanted output**
+
+`/dev/null` is the fake disk on linux, direction output to this place will disappears.    
 ```
 ls -l /bin/usr 2> /dev/null
 ```
@@ -333,16 +338,56 @@ ls -lh /usr/bin | less
 ```
 
 **The difference between > and |**  
-The direction operator connects a command with a file while the pipeline operator connects the ouput of one command with the input of a second command.  
+The direction operator connects a command with a file, while the pipeline operator connects the output of one command with the input of a second command.  
 ```{bash}
 ls -lh /usr/bin | head
 ```
 
+# Regular expression
+
+
+# Data Integrity
+The two most common checksum algorithms for ensuring data integrity are MD5 and SHA-1.  
+
+
+
+# run in background and foreground
+```
+# run in the background
+ls -lR / > ls_list 2> /dev/null &
+
+
+# bring background process to the foreground
+fg %num 
+
+# num is the job number
+```
+
+**close the terminal will cause the background jobs killed**
+
+Ctrl + Z stop the process.
+After finished a process the shell will set its value to a variable in the shell named $?.
+
+```
+ls -lh /
+
+echo $?
+
+# will return 0
+```
+
+- `nohup`: keep program running when close the terminal.  
+- `Tmux`: 
+
+
+# program run operators
+- `&&`: the subsequent program will run only when the first program successfully finished.  
+
+- `||`: the subsequent program will run only when the first program failed.  
+
+- `;`: run multiple command in one line.  
 
 # Seeing the world as the shell sees it 
-1. echo 
-
-
 ## expansion  
 ### pathname expansion  
 ```{bash}
@@ -1264,21 +1309,44 @@ ClientAliveCountMax 0
 ```
 
 
-
 # Archiving and backup
 ## gzip  
-the `gzip` program is used to compress one or more files. The `gunzip` program is used to restore compressed files to their original.  
+the `gzip` program is used to compress one or more files. The `gunzip` program is used to restore compressed files to their original. 
+
+compress files in place (replace original file). 
 ```{bash}
 ls -l /etc > foo.txt
 ls -l foo.txt
 
 gzip foo.txt
 ls -lh
+
 gunzip foo.txt.gz
 ls -lh
 
 rm foo*
 ```
+
+
+compress file to standard output
+```
+gzip -c foo.txt > foo.txt.gz
+```
+
+
+append the compress o an exist compressed file
+```
+gzip -c another.txt >> foo.txt.gz
+```
+
+Working with gzipped file
+- `zcat`  
+- `zgrep`  
+- `zless`  
+- `zdiff`  
+- `zless`  
+
+
 
 
 ## bzip2
@@ -1548,6 +1616,7 @@ sudo rsync -ac --delete /etc /home /usr/local /media/bigdisk/backup
 ```
 the --delete option to remove files that may have existed on the backup device that no longer existed on the source de- vice (this is irrelevant the first time we make a backup, but will be useful on subsequent copies).  
 
+
 ## backup over a network
 ```
 sudo rsync -av --delete --rsh=ssh /etc /home /usr/local remote-sys:/backup
@@ -1655,7 +1724,7 @@ When we pass regular expressions containing metacharacters on the command line, 
 |`[:upper:]`|The uppercase characters.|
 |`[:xdigit:]`|Characters used to express hexadecimal numbers. In ASCII, equivalent to: [0-9A-Fa-f]|
 
-```{bash}
+```
 grep -h '[ABCDEFGHIJKLMNOPQRSTUVWXYZ]' dirlist-*.txt
 
 grep -h '[[:upper:]]' dirlist-*.txt
@@ -1673,7 +1742,7 @@ grep -hE '(bz|gz|zip)' dirlist-*.txt
 # Text Processing
 ## cat
 concatenate files and print on the standard ouput.  
-```{bash}
+```
 # show the non-printing characters in the text
 cat -A foo.txt
 
@@ -1683,7 +1752,7 @@ cat -ns foo.txt
 
 ## sort
 Sort lines of text files.  
-```{bash}
+```
 # merge multiple files
 sort dirlist-* > merged-sorted-files.txt
 
@@ -1699,16 +1768,34 @@ sort k 1, 1 -k 2nr os
 sort -k 1,1 -k 3.4bn -k 3.5bn os
 
 sort -t ":" -k 7 /etc/passwd
+
+sort -k1,1V -k2,2n example2.bed
+
+# -S options specify how many memory to use
+# 2G of memory
+sort -k1,1 -k4,4n -S2G exmaple.gtf
+
+# 2M of memory
+sort -k1,1 -k4,4n -S2M exmaple.gtf
+
+# 50% of the memory
+sort -k1,1 -k4,4n -S50% exmaple.gtf
+
+# --paralell specify how many cores to use
+sort -k1,1 -k4,4n --paralell 4 exmaple.gtf
 ```
 
+
 ## uniq
-report or omit repeated lines.  
+**remove consecutive duplicates**.  
 `uniq` performs a seemingly trivial task. When given a sorted file, it removes any duplicate lines and send the results to standard output. It is often used in conjunction with sort to  clean the output of duplicates.  
-```{bash}
+```
 sort foo.txt | uniq
 
 # print the duplicated time for each line
 sort foo.txt | uniq -c
+
+
 ```
 
 
@@ -1725,7 +1812,7 @@ The `cut` program is used to extract a section of text from a line and output ex
 |`--complement`|Extract the entire line of text, except for those portions specified by -c and/or -f.|
 
 
-```{bash}
+```
 # extract the 3rd column from the os file
 cut -f 3 os
 
@@ -1753,15 +1840,19 @@ In some ways, `join` is like `paste` in that it adds columns to a file, but it u
 
 The join program performs the same operation. It joins data from multiple files based on a shared key field.  
 
-```{bash, eval=F}
+```
 # join files by shared key column
 join os-key-name os-key-version
+
+# join two file by a common column
+join -1 <file_1_field> -2 <file_2_field> <file_1> <file_2>
 ```
+
 
 ## comm
 compares two files and displays the lines that are unique to each one and the lines they have in common.  
 
-```{bash}
+```
 comm file1 file2
 
 # suppress output the first two fields
@@ -1780,7 +1871,7 @@ used to detect the differences between files. However, `diff` is a much more com
 |`r1dr2`|delet the lines in the first file at position r1, which would have appeared at range r2 in the second file.|
 
 
-```{bash}
+```
 # the default out put format
 diff file1 file2
 
@@ -1795,7 +1886,7 @@ diff -u file1 file2
 ## patch
 The `patch` program is used to apply changes to text file. It accepts output from `diff` and is generally used to convert older version of files into newer version.
 
-```{bash, eval = F}
+```
 # syntax
 diff -Naur old_file new_file > diff_file
 
@@ -1809,7 +1900,7 @@ patch < diff_file
 
 ## tr
 translate or delete characters.  
-```{bash, eval=F}
+```
 # syntax
 tr option... SET1 SET2
 
@@ -1835,6 +1926,7 @@ Character sets may be expressed in one of the three ways:
 - POSIX character classes. for example [:upper:]  
 
 In most case, both character sets should be equal length; however, it is possible for the first set to be larger than the second, particularly if we wish to convert multiple characters to a single character.
+
 
 ## sed
 The name `sed` is short for *stream editor*. It performs text editing on a stream of text, either a set of specified files or standard input.  
@@ -1917,11 +2009,12 @@ sed -e 's/#.*//;/^$/d' file.txt
 |`addr1,+n`| match addr1 and the following n lines.|
 |`addr!`| match all lines except addr, which may be any of the froms.|
 
+
 ## awk
 The `awk` is mostly used for pattern scanning and processing. It searches one or more files to see if they contain lines that matches with the specified patterns and then perform associated actions.
 
 Some of the key features of awk:  
-- awk views a text file as records and files.  
+- awk views a text file as records and fields.  
 - like common programming language, awk has variables, conditionals and loops.  
 - awk has arithmetic and string operators.  
 - awk can generate formatted reports.  
@@ -1938,6 +2031,7 @@ awk '/search pattern1/ {actions}
 - several patterns and actions are possible in awk.  
 - file - input file.  
 - single quotes around program is to avoid shell not to interpret any of its special characters.  
+
 
 
 **awk working methodology**  
@@ -1978,7 +2072,10 @@ awk '$4 ~/Technology/' employee.txt
 **Initialization and final action**  
 `awk` has two important patterns which are specified by the keyword called BEGIN and END.  
 
-syntax
+The BEGIN pattern specifies what to do *before* the first record is read in.
+The END specifies what to do *after* the last record's processing is complete.  
+
+syntax  
 ```
 BEGIN {actions}
 {action} # action for every line in a file
@@ -1987,6 +2084,23 @@ END {actions}
 - # is for comments in `awk`
 - actions specified in the BEGIN section will be executed before starts reading the lines from the input. 
 - END actions will be performed after completing the reading and processing the lines from the input.
+
+
+**associative array**
+Associative arrays behave like Python's dictionaries. We can create a associative array by simply assigning a value to a key.
+
+```
+awk '/Lypla1/ {feature[$3] += 1}; END{for (k in feature) print k "\t" feature[k]}' Mus_musculus_GRCm38.75_chr1.gtf
+```
+
+**awk built-in fucntions**
+- `tolower(s)`: Convert string s to lowercase.  
+- `toupper(s)`: Convert string s to uppercase. 
+- `substr(s, i, j)`: Return the substring of s that starts at i and ends at j.
+- `split(s, x, d)`: Split string s into chunks by delimiter d, place chunks in array x.  
+- `sub(f, r, s)`: Find regular expression f in s and replace it with r (modifying s in place); use `gsub` for global substitution; returns a positive value if is found.  
+
+
 
 
 ## aspell 
@@ -1998,12 +2112,12 @@ aspell check textfile
 aspell check -H html_file
 ```
 
+
 ## view multiple files in one terminal
 ```
 # tail accepts multiple -f option
 tail -f /etc/password -f /etc/profile
 ```
-
 
 
 # Formatting Output
@@ -2155,6 +2269,35 @@ local variables are only accessible within the shell function in which they are 
 
 
 # Flow Control
+## test
+
+**File and directory test expression**  
+- `-d dir`: dir is a directory
+- `-f file`: file is a file
+- `-e file`: file exists
+- `-h link`: link is a link
+- `-r file`: file is readable
+- `-w file`: file is writable
+- `-x file`: file is executable 
+
+
+```
+# is this a directory?
+test -d some_directory; echo $? 
+
+
+# is this a file?
+test -f some_file.txt; echo $?
+
+
+# is this file readable?
+test -r some_file.txt; echo $?
+
+
+# is this file writable?
+# test -w some_file.xt; echo $?
+```
+
 
 ```
 # syntax

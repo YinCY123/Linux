@@ -1,0 +1,62 @@
+---
+title: "The_linux_command_line"
+author: "YinCY"
+format: html
+editor: source
+---
+
+# types of commands
+- an executable program
+- a command built into the shell itself
+- a shell function
+- an alias
+
+
+### type
+display a command's type.  
+
+### which
+display an executable's location. 
+
+
+# getting a command's documentation
+### help command
+get help for shell builtins
+
+### --help
+display usage information
+
+
+### man
+display a program's manual page
+
+
+### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
