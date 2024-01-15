@@ -1,3 +1,0 @@
-word matching using: the
-word matching using: thethe
-word matching using: thery

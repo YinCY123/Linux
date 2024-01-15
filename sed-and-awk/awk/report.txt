@@ -1,7 +1,0 @@
-NUm	Description	Type           	Price	Qty  
--------------------------------------------
-101	HD Camcorder   	Video          	$210.0	010
-102	Refrigerator   	Appliance      	$850.0	002
-103	MP3 Player     	Audio          	$270.0	015
-104	Tennis Racket  	Sports         	$190.0	020
-105	Laser Printer  	Office         	$475.0	005
