@@ -1,0 +1,132 @@
+---
+title: "git"
+author: "YinCY"
+format: html
+---
+
+# Basic of Git
+## telling git who you are
+```
+git config --global user.name "Your Name"
+git config --global user.email "example@163.com"
+
+
+# enable terminal colors
+git config --global color.ui true
+
+# set the default editor
+# when with git commit without -m option git will init the default editor
+git config --global core.editor vi
+```
+
+## Creating Repositories
+With Git, there are two primary ways to create a repository: by initializing one from an existing directory, or cloning a repository that exists elsewhere.
+
+You can clone repositories from anywhere: somewhere else on your filesystem, from your local network, or across the Internet.
+
+
+Working with Git is fundamentally about creating and manipulating these commits: creating commits, looking at past commits, sharing commits, and comparing different commits.
+
+
+### create a repository from an empty directory
+```
+# make a directory
+mkdir snp
+cd snp
+
+git init
+```
+
+### cloning a repository from exists
+```
+# go to the directory where you want to place the repository
+
+git clone git@github.com:lh3/seqtk.git
+```
+
+Note that you won’t be able to directly modify Heng Li’s original GitHub repository—cloning this repository only gives you access to retrieve new updates from the GitHub repository as they’re released.
+
+
+## tell git which file to track
+```
+# tell git to track README
+git add README
+```
+
+## Staging Files
+A file that’s tracked means Git knows about it. A staged file is not only tracked, but its latest changes are staged to be included in the next commit.
+
+
+**The two roles of the `git add`**  
+- Alerting Git to start tracking untracked files.  
+- Staging changes made to an already tracked file.  
+
+
+## snapshot of your project
+```
+git commit "some descriptions"
+```
+
+## Seeing File Difference
+Without any arguments, `git diff` shows you the difference between the files in your working directory and what’s been staged.  
+
+If none of your changes have been staged,` git diff` shows us the difference between your last commit and the current versions of your files.
+
+When Git’s terminal colors are enabled, git diff’s output is easier to read, as added lines will be green and deleted lines will be red.
+
+```
+git diff
+```
+
+## Seeing Your Commit History
+Commits are like chains (directed acyclic graphs), with each commit pointing to its parent.
+
+```
+git log
+```
+
+## Moving and Removing Files
+When Git tracks your files, it wants to be in charge. Using the command `mv` to move a tracked file will confuse Git. The same applies when you remove a file with `rm`. To move or remove tracked files in Git, we need to use Git’s version of mv and rm: `git mv` and `git rm`.
+
+
+## Telling Git What to Ignore
+```
+# 
+.gitignore
+
+# set a global ignore files at the home directory
+git config --global core.excludesfile ~/.gitignore_global
+```
+
+
+## Undoing a Stage
+Recall that one nice feature of Git is that you don’t have to include messy changes in a commit—just don’t stage these files. If you accidentally stage a messy file for a com‐ mit with git add, you can unstage it with git reset.
+
+
+```
+git reset HEAD [have staged file]
+```
+
+unstage a file won't alter the changes has made to this file.
+
+
+## Connecitng with Git Remotes
+```
+git remote add origin git@github.com:YinCY123/BioDataSkill.git
+
+# to see the repoitory
+git remote -v
+```
+
+
+## Pushing and Pull commits to/from a remote repository
+```
+git push
+git pull
+```
+
+
+
+
+
+
