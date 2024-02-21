@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # How to Increase Swap Size on Ubuntu Linux
 The recent release of Ubuntu use swap file instead of the traditional swap partition. The swap file is simply a file under the root which is used as swap to share the burden on the RAM.
 
-The bigest advantage of using a swap file is that you can easily resize it. That's not always the case when you use a dedicated swap partition. 
+The biggest advantage of using a swap file is that you can easily resize it. That's not always the case when you use a dedicated swap partition. 
 
 ## Increase swap size on ubuntu
 ```
